@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,6 +17,9 @@ public class Movie extends OnDemand {
 
 
     LocalDate publishDate;
+
+    @Lob
+    private Byte[] thumbnail;
 
 
 }

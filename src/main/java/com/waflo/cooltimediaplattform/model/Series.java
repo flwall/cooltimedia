@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +21,8 @@ public class Series extends Media {
 
 
     LocalDate creationDate;
+    @Lob
+    private Byte[] thumbnail;
 
 
 }
