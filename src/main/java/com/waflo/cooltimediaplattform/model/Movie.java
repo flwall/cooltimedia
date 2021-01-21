@@ -2,6 +2,7 @@ package com.waflo.cooltimediaplattform.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Accessors(chain = true)
 @Entity
 public class Movie extends OnDemand {
 

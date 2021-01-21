@@ -9,18 +9,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
 import com.waflo.cooltimediaplattform.ui.home.HomeView;
 import com.waflo.cooltimediaplattform.ui.views.MoviesView;
 
-@PWA(
-        name = "Cooltimedia",
-        shortName = "CTM",
-        enableInstallPrompt = true
-)
-@Theme(Lumo.class)
+//@Theme(Lumo.class)
 //@CssImport("./styles/shared-styles.css") not needed rn
 public class MainLayout extends AppLayout {
 

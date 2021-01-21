@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.MovieComponent;
+import com.waflo.cooltimediaplattform.ui.component.MovieList;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -32,10 +33,7 @@ public class HomeView extends VerticalLayout {
     private void init() {
         this.add(new H1("Filme"));
 
-        var movies = _movieService.findAll().stream().map(m -> new ListItem(new MovieComponent(m)));
-        var div = new Div(new UnorderedList(movies.toArray(ListItem[]::new)));
-        div.addClassName("movieList");
-
+        var div=new MovieList(_movieService.findAll());
 
         add(div);
 

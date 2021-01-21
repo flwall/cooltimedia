@@ -13,10 +13,7 @@ public class MovieComponent extends Div {
 
     public MovieComponent(Movie movie) {
 
-        var container = new Div(new Text(movie.getTitle()), new Paragraph(movie.getAuthor().getFirstName() + " " + movie.getAuthor().getLastName()));
-        var a = new Anchor("/movies/" + movie.getId(), container);
-        a.add(container);
-        add(a);
+
 
 
     }

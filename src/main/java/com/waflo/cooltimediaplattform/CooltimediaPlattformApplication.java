@@ -38,7 +38,9 @@ public class CooltimediaPlattformApplication {
             mov.setPublishDate(LocalDate.now());
             mov.setAuthor(auth);
             repository.save(mov);
-
+            var movie = new Movie().setTitle("The Dark Knight Returns").setPublishDate(LocalDate.of(2012, 12, 12));
+            movie.setAuthor(auth);
+            repository.save(movie);
         };
     }
 }
