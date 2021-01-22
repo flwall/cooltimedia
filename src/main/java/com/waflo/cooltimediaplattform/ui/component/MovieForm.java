@@ -10,28 +10,33 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileBuffer;
+import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 import com.waflo.cooltimediaplattform.model.Category;
+import com.waflo.cooltimediaplattform.model.File;
 import com.waflo.cooltimediaplattform.model.Movie;
 import com.waflo.cooltimediaplattform.model.Person;
+import com.waflo.cooltimediaplattform.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.service.CategoryService;
+import com.waflo.cooltimediaplattform.service.FileService;
 import com.waflo.cooltimediaplattform.service.PersonService;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 public class MovieForm extends FormLayout {
     TextField title = new TextField("Title");
-    Upload upload;
-    DatePicker date = new DatePicker(LocalDate.now());
+    TextArea summary = new TextArea("Zusammenfassung");
+    Upload stream;
+    DatePicker publishDate = new DatePicker(LocalDate.now());
     Upload thumbnail;
+
     ComboBox<Person> author = new ComboBox<>();
     ComboBox<Category> category = new ComboBox<>();
 
@@ -43,13 +48,42 @@ public class MovieForm extends FormLayout {
     Binder<Movie> binder = new BeanValidationBinder<>(Movie.class);
     private Movie movie;
 
-    public MovieForm(PersonService personService, CategoryService categoryService) {
+
+    public MovieForm(PersonService personService, CategoryService categoryService, FileContentStore store, FileService fileService) {
         addClassName("movie-form");
-        var rec = new MultiFileBuffer();
-        upload = new Upload(rec);
+
+        var rec = new FileBuffer();
+
+        stream = new Upload(rec);
+        stream.setAcceptedFileTypes("video/*", "multipart/form-data");
+
+        stream.addAllFinishedListener(l -> {
+
+            var f = new File();
+            f.setCreated(LocalDate.now());
+            f.setName(rec.getFileName());       //evt. movie title?
+            f.setMimeType(rec.getFileData().getMimeType());
+
+            store.setContent(f, rec.getInputStream());
+            fileService.add(f);
+            movie.setStream(f);
+        });
         //add listener
-        var r = new MultiFileBuffer();
+        var r = new FileBuffer();
+
         thumbnail = new Upload(r);
+        thumbnail.setAcceptedFileTypes("image/*");
+        thumbnail.addAllFinishedListener(l -> {
+
+            var f = new File();
+            f.setMimeType(r.getFileData().getMimeType());
+            f.setName(r.getFileName());
+            f.setCreated(LocalDate.now());
+            store.setContent(f, rec.getInputStream());
+            fileService.add(f);
+            movie.setThumbnail(f);
+
+        });
         author.setItems(personService.findAll());
         author.setItemLabelGenerator(s -> s.getFirstName() + " " + s.getLastName());
         category.setItems(categoryService.findAll());
@@ -58,11 +92,11 @@ public class MovieForm extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-
         add(
                 title,
-                date,
-                upload,
+                summary,
+                publishDate,
+                stream,
                 thumbnail,
                 author,
                 category,

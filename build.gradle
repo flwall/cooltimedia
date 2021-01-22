@@ -20,7 +20,7 @@ repositories {
 }
 
 ext {
-    set('vaadinVersion', "18.0.5")
+    set('vaadinVersion', "14.4.6")
 }
 
 dependencies {
@@ -29,6 +29,11 @@ dependencies {
     implementation 'com.vaadin:vaadin-spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
+    //implementation 'org.apache.solr:solr-solrj:5.5.3'
+    implementation 'com.github.paulcwarren:spring-content-fs-boot-starter:1.2.0'
+
+    implementation 'org.hibernate.validator:hibernate-validator'
+
 
     implementation 'org.springframework.security:spring-security-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-oauth2-jose'

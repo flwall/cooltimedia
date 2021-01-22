@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class Series extends Media {
 
 
     LocalDate creationDate;
-    @Lob
-    private Byte[] thumbnail;
+    @OneToOne
+    private File thumbnail;
 
 
 }
