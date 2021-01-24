@@ -67,8 +67,9 @@ public class MovieForm extends FormLayout {
         stream.setAcceptedFileTypes("video/*", "multipart/form-data");
         stream.setId("stream-upload");
         streamLabel.setFor(stream);
-        stream.addAllFinishedListener(l -> {
 
+        stream.addAllFinishedListener(l -> {
+            if(rec.getFileData()==null)return;
             var f = new File();
             f.setCreated(LocalDate.now());
             f.setName(rec.getFileName());       //evt. movie title?
@@ -90,7 +91,7 @@ public class MovieForm extends FormLayout {
             f.setMimeType(r.getFileData().getMimeType());
             f.setName(r.getFileName());
             f.setCreated(LocalDate.now());
-            store.setContent(f, rec.getInputStream());
+            store.setContent(f, r.getInputStream());
             fileService.add(f);
             movie.setThumbnail(f);
 

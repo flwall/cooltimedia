@@ -14,8 +14,8 @@ public class Category {
 
     private String name;
 
-    @Lob
-    private Byte[] image;
+    @OneToOne
+    private File image;
 
     //optional parentCategory
 
