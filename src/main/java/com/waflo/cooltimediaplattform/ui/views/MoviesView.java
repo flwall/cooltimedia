@@ -16,6 +16,7 @@ import com.waflo.cooltimediaplattform.service.PersonService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.MovieForm;
 import com.waflo.cooltimediaplattform.ui.component.MovieList;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -26,14 +27,14 @@ public class MoviesView extends VerticalLayout {
 
     private List<Movie> movies;
     private MovieService movieService;
+    private MovieForm form;
 
-    public MoviesView(MovieService movieService, PersonService personService, CategoryService categoryService, FileContentStore store, FileService fileService) {
+    public MoviesView(MovieService movieService, MovieForm form) {
         this.movieService = movieService;
-        this.personService = personService;
-        this.categoryService = categoryService;
         this.movies = movieService.findAll();
+        this.form=form;
 
-        form = new MovieForm(personService, categoryService, store, fileService);
+
 
         initView();
     }
@@ -54,6 +55,7 @@ public class MoviesView extends VerticalLayout {
 
         Div content = new Div(form);
         content.addClassName("movieform");
+        content.setSizeFull();
         add(content);
         closeEditor();
 
@@ -88,9 +90,6 @@ public class MoviesView extends VerticalLayout {
         form.addClassName("editing");
     }
 
-    private CategoryService categoryService;
-    private PersonService personService;
-    MovieForm form;
 
     private void listenAdd(ClickEvent<Button> buttonClickEvent) {
 

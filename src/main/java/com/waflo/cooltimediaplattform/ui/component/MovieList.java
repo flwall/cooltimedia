@@ -10,7 +10,7 @@ import com.waflo.cooltimediaplattform.model.Movie;
 
 import java.util.List;
 
-@StyleSheet("./styles/movie.css")
+///@StyleSheet("./styles/movie.css")
 public class MovieList extends HorizontalLayout {
 
     private List<Movie> movies;
@@ -28,7 +28,8 @@ public class MovieList extends HorizontalLayout {
     public void init() {
         this.removeAll();
         for (Movie movie : movies) {
-            var container = new Div(new Text(movie.getTitle()), new Paragraph(movie.getAuthor().getFirstName() + " " + movie.getAuthor().getLastName()));
+
+            var container = new Div(new Text(movie.getTitle()), new Paragraph(movie.getAuthor()!=null?movie.getAuthor().getFirstName() + " " + movie.getAuthor().getLastName():""));        //bad fallback
             var a = new Anchor("/movie/" + movie.getId(), container);
             container.addClassName("scrollmenu");
             a.add(container);

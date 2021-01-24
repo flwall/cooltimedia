@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,6 +19,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.waflo.cooltimediaplattform.model.Category;
 import com.waflo.cooltimediaplattform.model.File;
 import com.waflo.cooltimediaplattform.model.Movie;
@@ -29,16 +32,19 @@ import com.waflo.cooltimediaplattform.service.PersonService;
 
 import java.time.LocalDate;
 
-
+@SpringComponent
+@UIScope
 public class MovieForm extends FormLayout {
-    TextField title = new TextField("Title");
+    TextField title = new TextField("Titel");
     TextArea summary = new TextArea("Zusammenfassung");
     Upload stream;
-    DatePicker publishDate = new DatePicker(LocalDate.now());
+    DatePicker publishDate = new DatePicker("Veröffentlicht am: ");
+    Label  streamLabel=new Label("Film-Datei: ");
+    Label thumbnailLabel=new Label("Thumbnail-Bild: ");
     Upload thumbnail;
 
-    ComboBox<Person> author = new ComboBox<>();
-    ComboBox<Category> category = new ComboBox<>();
+    ComboBox<Person> author = new ComboBox<>("Author");
+    ComboBox<Category> category = new ComboBox<>("Kategorie");
 
 
     Button save = new Button("Save");
@@ -52,11 +58,15 @@ public class MovieForm extends FormLayout {
     public MovieForm(PersonService personService, CategoryService categoryService, FileContentStore store, FileService fileService) {
         addClassName("movie-form");
 
-        var rec = new FileBuffer();
+        //initBindings();
+        binder.bindInstanceFields(this);
 
+
+        var rec = new FileBuffer();
         stream = new Upload(rec);
         stream.setAcceptedFileTypes("video/*", "multipart/form-data");
-
+        stream.setId("stream-upload");
+        streamLabel.setFor(stream);
         stream.addAllFinishedListener(l -> {
 
             var f = new File();
@@ -72,6 +82,7 @@ public class MovieForm extends FormLayout {
         var r = new FileBuffer();
 
         thumbnail = new Upload(r);
+        thumbnail.setId("upload-thumbnail");
         thumbnail.setAcceptedFileTypes("image/*");
         thumbnail.addAllFinishedListener(l -> {
 
@@ -84,25 +95,19 @@ public class MovieForm extends FormLayout {
             movie.setThumbnail(f);
 
         });
-        author.setItems(personService.findAll());
+        thumbnailLabel.setFor(thumbnail);
+
         author.setItemLabelGenerator(s -> s.getFirstName() + " " + s.getLastName());
-        category.setItems(categoryService.findAll());
+        author.setItems(personService.findAll());
         category.setItemLabelGenerator(Category::getName);
+        category.setItems(categoryService.findAll());
 
 
-        binder.bindInstanceFields(this);
+        add(title, summary, streamLabel, stream, publishDate, thumbnailLabel, thumbnail, author, category, createButtonsLayout());
 
-        add(
-                title,
-                summary,
-                publishDate,
-                stream,
-                thumbnail,
-                author,
-                category,
-                createButtonsLayout()
-        );
     }
+
+
 
     public Movie getMovie() {
         return movie;

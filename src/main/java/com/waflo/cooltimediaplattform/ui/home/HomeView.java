@@ -10,7 +10,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
-import com.waflo.cooltimediaplattform.ui.component.MovieComponent;
 import com.waflo.cooltimediaplattform.ui.component.MovieList;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
