@@ -2,11 +2,12 @@ package com.waflo.cooltimediaplattform.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 
@@ -15,17 +16,21 @@ import java.time.LocalDate;
 @Data
 public class Movie extends OnDemand {
 
+    @NotEmpty
     String title;
+
     String summary;
 
     @OneToOne
+    @NotNull
     File stream;
 
-
+    @PastOrPresent
     LocalDate publishDate;
 
     @OneToOne
+    @NotNull
     private File thumbnail;
 
 
-    }
+}

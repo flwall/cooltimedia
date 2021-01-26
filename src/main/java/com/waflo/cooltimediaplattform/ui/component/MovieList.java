@@ -29,7 +29,7 @@ public class MovieList extends HorizontalLayout {
         this.removeAll();
         for (Movie movie : movies) {
 
-            var container = new Div(new Text(movie.getTitle()), new Paragraph(movie.getAuthor()!=null?movie.getAuthor().getFirstName() + " " + movie.getAuthor().getLastName():""));        //bad fallback
+            var container = new Div(new Text(movie.getTitle()), new Paragraph(movie.getAuthor()!=null?movie.getAuthor().getName():""));        //bad fallback
             var a = new Anchor("/movie/" + movie.getId(), container);
             container.addClassName("scrollmenu");
             a.add(container);

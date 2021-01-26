@@ -17,10 +17,6 @@ import java.nio.file.Path;
 @Configuration
 @EnableFilesystemStores
 public class AppConfig implements WebMvcConfigurer {
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**").addResourceLocations("file:./uploads").setCacheControl(CacheControl.noCache());
-    }
 
     @Bean
     File filesystemRoot() {

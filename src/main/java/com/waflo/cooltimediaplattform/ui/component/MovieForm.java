@@ -98,7 +98,7 @@ public class MovieForm extends FormLayout {
         });
         thumbnailLabel.setFor(thumbnail);
 
-        author.setItemLabelGenerator(s -> s.getFirstName() + " " + s.getLastName());
+        author.setItemLabelGenerator(Person::getName);
         author.setItems(personService.findAll());
         category.setItemLabelGenerator(Category::getName);
         category.setItems(categoryService.findAll());

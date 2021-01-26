@@ -3,6 +3,7 @@ package com.waflo.cooltimediaplattform.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
@@ -12,12 +13,14 @@ public class Category {
     @GeneratedValue
     long Id;
 
+    @NotEmpty
     private String name;
 
     @OneToOne
     private File image;
 
-    //optional parentCategory
+    @ManyToOne
+    Category parentCategory;
 
     @OneToMany
     private List<OnDemand> onDemands;

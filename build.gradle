@@ -31,6 +31,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     //implementation 'org.apache.solr:solr-solrj:5.5.3'
     implementation 'com.github.paulcwarren:spring-content-fs-boot-starter:1.2.0'
+    implementation 'com.github.paulcwarren:spring-content-rest-boot-starter:1.2.0'
+    //implementation 'com.springframework.boot:spring-boot-starter-data-rest'
+
 
     implementation 'org.hibernate.validator:hibernate-validator'
 

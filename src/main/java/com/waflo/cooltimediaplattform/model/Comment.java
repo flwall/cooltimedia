@@ -3,6 +3,7 @@ package com.waflo.cooltimediaplattform.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -12,8 +13,11 @@ public class Comment {
     @GeneratedValue
     long Id;
 
+@NotEmpty
+    private String title;
 
-    private String title, comment;
+
+    String comment;
 
     @ManyToOne
     @JoinColumn(name = "fk_creator")
@@ -22,6 +26,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "fk_media")
     private Media referencedMedia;
+
 
     private LocalDate createdAt;
 }

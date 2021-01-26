@@ -3,6 +3,8 @@ package com.waflo.cooltimediaplattform.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Data
@@ -12,6 +14,8 @@ public class Rating {
     @GeneratedValue
     long Id;
 
+    @Min(0)
+    @Max(5)
     private int rating;         ///0-5
     @ManyToOne
     @JoinColumn(name = "fk_creator")

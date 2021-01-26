@@ -1,11 +1,13 @@
 package com.waflo.cooltimediaplattform.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.sql.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
@@ -15,7 +17,10 @@ public class Person {
     @GeneratedValue
     long Id;
 
-    private String firstName, lastName;
+    @NotEmpty
+    private String name;
+
+    @PastOrPresent
     private LocalDate birthDate;
 
     @OneToOne

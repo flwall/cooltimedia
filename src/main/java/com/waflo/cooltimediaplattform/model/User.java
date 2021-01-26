@@ -12,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class User extends Person {
 
+    @NotEmpty
     private String username;
 
     @Email
