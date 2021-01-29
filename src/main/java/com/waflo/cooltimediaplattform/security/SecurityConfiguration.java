@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
                 // Allow all requests by logged in users.
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
 
                 // Configure the login page.
                 .and().oauth2Login()
