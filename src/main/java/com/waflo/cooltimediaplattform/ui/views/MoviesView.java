@@ -17,11 +17,13 @@ import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.MovieForm;
 import com.waflo.cooltimediaplattform.ui.component.MovieList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 
 @Route(value = "movies", layout = MainLayout.class)
 @PageTitle("Movies | Cooltimedia")
+@Secured("ROLE_USER")
 public class MoviesView extends VerticalLayout {
 
 

@@ -16,8 +16,10 @@ import com.waflo.cooltimediaplattform.model.Movie;
 import com.waflo.cooltimediaplattform.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.Video;
+import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "movie", layout = MainLayout.class)
+@Secured("ROLE_USER")
 public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
 
     private final MovieService movieService;

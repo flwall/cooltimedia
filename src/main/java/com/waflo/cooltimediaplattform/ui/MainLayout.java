@@ -1,5 +1,6 @@
 package com.waflo.cooltimediaplattform.ui;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Anchor;
@@ -12,9 +13,11 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import com.waflo.cooltimediaplattform.security.SecurityUtils;
 import com.waflo.cooltimediaplattform.ui.home.HomeView;
 import com.waflo.cooltimediaplattform.ui.views.MoviesView;
-@PWA(enableInstallPrompt = true, shortName = "CTM", name = "Cooltimedia")
+
+@PWA(shortName = "CTM", name = "Cooltimedia")
 @Theme(Lumo.class)
 //@CssImport("./styles/shared-styles.css") not needed rn
 public class MainLayout extends AppLayout {
@@ -38,9 +41,13 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Cooltimedia");
         logo.addClassName("logo");
 
-        Anchor logout = new Anchor("/logout", "Log out");
-
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        Component acc;
+        if (!SecurityUtils.isUserLoggedIn()) {
+            acc = new Anchor("/oauth2/authorization/auth0", "Einloggen");
+        } else {
+            acc = new HorizontalLayout(new Anchor("/account", "Mein Konto"), new Anchor("/logout", "Ausloggen"));
+        }
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, acc);
         header.addClassName("header");
         header.setWidth("100%");
         header.expand(logo);

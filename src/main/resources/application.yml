@@ -1,8 +1,0 @@
-#auth0:
-#  audience: YOUR_API_IDENTIFIER
-#spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://YOUR_DOMAIN/
