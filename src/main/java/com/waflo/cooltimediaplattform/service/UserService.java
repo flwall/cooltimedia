@@ -9,18 +9,24 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
-        this.categoryRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
 
     public List<User> findAll() {
-        return categoryRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> findById(long id) {
-        return categoryRepository.findById(id);
+        return userRepository.findById(id);
+    }
+
+    public Optional<User> findByOauthId(String oauth_id){return userRepository.findAll().stream().filter(s->s.getOauth_id().equals(oauth_id)).findFirst();}
+
+    public User save(User u){
+        return userRepository.save(u);
     }
 }

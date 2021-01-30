@@ -1,20 +1,22 @@
 package com.waflo.cooltimediaplattform.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@EqualsAndHashCode(callSuper = false)
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User extends Person {
+public class User {
+
+    @Id
+    @GeneratedValue
+    private long Id;
+
+    private String oauth_id;
 
     @NotEmpty
     private String username;
@@ -22,6 +24,21 @@ public class User extends Person {
     @Email
     @NotEmpty
     private String email;
+
+    public User() {
+    }
+
+    public User(String oauth_id, String username, String email) {
+        this.oauth_id = oauth_id;
+        this.username = username;
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Username: " + username + "\nEmail: " + email;
+
+    }
 
 
 }

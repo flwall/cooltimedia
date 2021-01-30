@@ -1,14 +1,17 @@
 package com.waflo.cooltimediaplattform.ui.views;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.model.Movie;
 import com.waflo.cooltimediaplattform.repository.FileContentStore;
+import com.waflo.cooltimediaplattform.security.UserSession;
 import com.waflo.cooltimediaplattform.service.CategoryService;
 import com.waflo.cooltimediaplattform.service.FileService;
 import com.waflo.cooltimediaplattform.service.MovieService;
@@ -18,6 +21,7 @@ import com.waflo.cooltimediaplattform.ui.component.MovieForm;
 import com.waflo.cooltimediaplattform.ui.component.MovieList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -27,14 +31,16 @@ import java.util.List;
 public class MoviesView extends VerticalLayout {
 
 
-    private List<Movie> movies;
-    private MovieService movieService;
-    private MovieForm form;
+    private final List<Movie> movies;
+    private final MovieService movieService;
+    private final MovieForm form;
+    private final UserSession session;
 
-    public MoviesView(MovieService movieService, MovieForm form) {
+    public MoviesView(MovieService movieService, MovieForm form, UserSession session) {
         this.movieService = movieService;
         this.movies = movieService.findAll();
         this.form=form;
+        this.session=session;
 
 
 
@@ -49,6 +55,7 @@ public class MoviesView extends VerticalLayout {
         add(movieList);
 
         add(new Button("Hinzufügen", this::listenAdd));
+        add(new Text(session.getUser().toString()));
 
         //make listener for file upload instead of handling inside form
         form.addListener(MovieForm.SaveEvent.class, this::saveMovie);
