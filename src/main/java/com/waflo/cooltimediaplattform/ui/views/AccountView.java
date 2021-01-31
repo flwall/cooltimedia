@@ -14,8 +14,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.model.File;
@@ -24,12 +22,12 @@ import com.waflo.cooltimediaplattform.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.security.UserSession;
 import com.waflo.cooltimediaplattform.service.FileService;
 import com.waflo.cooltimediaplattform.service.UserService;
-import com.waflo.cooltimediaplattform.ui.HeaderLayout;
+import com.waflo.cooltimediaplattform.ui.MainLayout;
 import org.springframework.security.access.annotation.Secured;
 
 import java.time.LocalDate;
 
-@Route(value = "account", layout = HeaderLayout.class)
+@Route(value = "account", layout = MainLayout.class)
 @Secured("ROLE_USER")
 @PageTitle("Mein Konto | CTM")
 public class AccountView extends VerticalLayout {
@@ -50,6 +48,7 @@ public class AccountView extends VerticalLayout {
         initMenuBar();
         initAccount(null);
     }
+
     private Div contentDiv;
 
     private void initMenuBar() {
@@ -64,10 +63,10 @@ public class AccountView extends VerticalLayout {
 
     private void initAccount(ClickEvent<MenuItem> menuItemClickEvent) {
 
-        if(contentDiv!=null)
+        if (contentDiv != null)
             remove(contentDiv);
 
-        contentDiv=new Div();
+        contentDiv = new Div();
 
         var username = new TextField("Benutzername", user.getUsername(), "Benutzername");
         contentDiv.add(username);
@@ -86,8 +85,10 @@ public class AccountView extends VerticalLayout {
             f.setMimeType(l.getMIMEType());
             f.setCreated(LocalDate.now());
             f.setName(l.getFileName());
-            store.unsetContent(user.getProfile_pic());
-            fileService.delete(user.getProfile_pic());
+            if (user.getProfile_pic() != null) {
+                store.unsetContent(user.getProfile_pic());
+                fileService.delete(user.getProfile_pic());
+            }
             store.setContent(f, rec.getInputStream());
             user.setProfile_pic(f);
             fileService.save(f);
@@ -100,7 +101,7 @@ public class AccountView extends VerticalLayout {
         });
 
         Button saveBtn = new Button("Speichern");
-        saveBtn.addClickListener(l->{
+        saveBtn.addClickListener(l -> {
             user.setUsername(username.getValue());
             userService.save(user);
 
@@ -110,8 +111,6 @@ public class AccountView extends VerticalLayout {
 
         add(contentDiv);
     }
-
-
 
 
 }
