@@ -5,7 +5,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
-import com.waflo.cooltimediaplattform.model.Movie;
+import com.waflo.cooltimediaplattform.backend.model.Movie;
 import com.waflo.cooltimediaplattform.ui.component.ICardCommand;
 
 public class MovieCardCommand implements ICardCommand {

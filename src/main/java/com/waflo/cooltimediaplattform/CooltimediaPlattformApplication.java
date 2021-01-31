@@ -1,10 +1,10 @@
 package com.waflo.cooltimediaplattform;
 
-import com.waflo.cooltimediaplattform.model.Category;
-import com.waflo.cooltimediaplattform.model.File;
-import com.waflo.cooltimediaplattform.model.Movie;
-import com.waflo.cooltimediaplattform.model.Person;
-import com.waflo.cooltimediaplattform.repository.*;
+import com.waflo.cooltimediaplattform.backend.model.Category;
+import com.waflo.cooltimediaplattform.backend.model.File;
+import com.waflo.cooltimediaplattform.backend.model.Movie;
+import com.waflo.cooltimediaplattform.backend.model.Person;
+import com.waflo.cooltimediaplattform.backend.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

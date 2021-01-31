@@ -1,7 +1,6 @@
 package com.waflo.cooltimediaplattform.ui.views;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.waflo.cooltimediaplattform.security.UserSession;
 import com.waflo.cooltimediaplattform.ui.component.AbstractForm;
 import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;

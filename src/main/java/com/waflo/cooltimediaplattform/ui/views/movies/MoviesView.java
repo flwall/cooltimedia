@@ -3,16 +3,16 @@ package com.waflo.cooltimediaplattform.ui.views.movies;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.waflo.cooltimediaplattform.model.Movie;
-import com.waflo.cooltimediaplattform.security.UserSession;
-import com.waflo.cooltimediaplattform.service.MovieService;
+import com.waflo.cooltimediaplattform.backend.model.Movie;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
+import com.waflo.cooltimediaplattform.backend.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.ListComponent;
 import com.waflo.cooltimediaplattform.ui.component.movies.MovieCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.movies.MovieForm;
-import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
 import com.waflo.cooltimediaplattform.ui.views.AbstractEntitiesView;
 import org.springframework.security.access.annotation.Secured;
@@ -57,6 +57,13 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
 
     }
 
+    @Override
+    protected void saveEntity(SaveEvent t) {
+        super.saveEntity(t);
+        var not=new Notification("Film erfolgreich gespeichert", 3000);
+        add(not);
+        not.open();
+    }
 
     @Override
     protected void initList() {

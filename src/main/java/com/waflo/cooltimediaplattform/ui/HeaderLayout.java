@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import com.waflo.cooltimediaplattform.security.SecurityUtils;
+import com.waflo.cooltimediaplattform.backend.security.SecurityUtils;
 
 @PWA(shortName = "CTM", name = "Cooltimedia")
 @Theme(Lumo.class)

@@ -12,8 +12,8 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
-import com.waflo.cooltimediaplattform.model.Movie;
-import com.waflo.cooltimediaplattform.service.MovieService;
+import com.waflo.cooltimediaplattform.backend.model.Movie;
+import com.waflo.cooltimediaplattform.backend.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.Video;
 import org.springframework.security.access.annotation.Secured;
@@ -53,7 +53,10 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
             div.add(info, new Text("Kategorie: " + movie.getCategory().getName()));
         var watchButton = new Button("Ansehen", this::watchVideo);
 
-        layout.add(div, new Image("/files/" + movie.getThumbnail().getId(), "Movie Thumbnail"));
+        var img = new Image("/files/" + movie.getThumbnail().getId(), "Movie Thumbnail");
+        img.setWidth("256px");
+        img.setHeight("256px");
+        layout.add(div, img);
         add(layout, watchButton);
     }
 
