@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -47,12 +48,15 @@ public class AccountView extends VerticalLayout {
         this.userService = userService;
 
         initMenuBar();
+        initAccount(null);
     }
+    private Div contentDiv;
 
     private void initMenuBar() {
         var menu = new MenuBar();
         menu.addThemeVariants(MenuBarVariant.LUMO_PRIMARY);
         menu.addItem("Mein Konto", this::initAccount);
+
         menu.addItem(new Anchor("/logout", "Ausloggen"));        //change color
 
         add(menu);
@@ -60,12 +64,17 @@ public class AccountView extends VerticalLayout {
 
     private void initAccount(ClickEvent<MenuItem> menuItemClickEvent) {
 
+        if(contentDiv!=null)
+            remove(contentDiv);
+
+        contentDiv=new Div();
+
         var username = new TextField("Benutzername", user.getUsername(), "Benutzername");
-        add(username);
+        contentDiv.add(username);
         final Image img;
         if (user.getProfile_pic() != null) {
             img = new Image("/files/" + user.getProfile_pic().getId(), "Profilbild");
-            add(img);
+            contentDiv.add(img);
         } else
             img = new Image();
         var picLabel = new Label("Profilbild ändern");
@@ -87,7 +96,7 @@ public class AccountView extends VerticalLayout {
             if (img.getSrc() != null)
                 remove(img);
             img.setSrc("/files/" + user.getProfile_pic().getId());
-            add(img);
+            contentDiv.add(img);
         });
 
         Button saveBtn = new Button("Speichern");
@@ -97,9 +106,9 @@ public class AccountView extends VerticalLayout {
 
         });
         var form = new FormLayout(picLabel, profilePic, saveBtn);
-        add(form);
+        contentDiv.add(form);
 
-
+        add(contentDiv);
     }
 
 

@@ -19,6 +19,7 @@ public class Series extends Media {
 @NotEmpty
     private String name;
 
+private String summary;
     @OneToMany
     List<Season> seasons;
 

@@ -35,6 +35,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
         this.movieService = movieService;
         this.entities=movieService.findAll();           //replace by Movies where User is owner
 
+        initView();
     }
 
     ListComponent<MovieCardCommand> movieList;

@@ -23,4 +23,8 @@ public class SeriesService {
     public Optional<Series> findById(long id) {
         return seriesRepository.findById(id);
     }
+
+    public Series save(Series entity) {
+        return seriesRepository.save(entity);
+    }
 }
