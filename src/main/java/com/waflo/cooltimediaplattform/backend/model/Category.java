@@ -16,12 +16,15 @@ public class Category {
     @NotEmpty
     private String name;
 
-    @OneToOne
-    private File image;
 
     @ManyToOne
     Category parentCategory;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<OnDemand> onDemands;
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

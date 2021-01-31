@@ -11,6 +11,7 @@ import com.vaadin.flow.component.crud.CrudEditor;
 import com.vaadin.flow.component.crud.CrudVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -37,6 +38,9 @@ import com.waflo.cooltimediaplattform.ui.data.PersonDataProvider;
 import org.springframework.security.access.annotation.Secured;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 @Route(value = "account", layout = MainLayout.class)
 @Secured("ROLE_USER")
@@ -51,7 +55,7 @@ public class AccountView extends VerticalLayout {
     private final CategoryDataProvider categoryDataProvider;
 
     private final Notification notification = new Notification("Benutzername erfolgreich geändert", 3000);
-    ;
+
 
     public AccountView(UserSession userSession, FileService fileService, FileContentStore store, UserService userService, PersonDataProvider personDataProvider, CategoryDataProvider categoryDataProvider) {
         this.user = userSession.getUser();
@@ -81,29 +85,80 @@ public class AccountView extends VerticalLayout {
         crud.addSaveListener(e -> personDataProvider.persist(e.getItem()));
         crud.addDeleteListener(e -> personDataProvider.delete(e.getItem()));
 
-        crud.getGrid().removeColumnByKey("Id");
+        crud.getGrid().removeColumnByKey("image");
+
+        crud.getGrid().addComponentColumn(person -> {
+            var img = person.getImage();
+            if (img == null) return new Div();
+
+            var comp = new Image("/files/" + img.getId(), "Pic");
+            comp.setWidth("48px");
+            comp.setHeight("48px");
+            return comp;
+        }).setHeader("Bild").setKey("image");
+
+
+        crud.getGrid().removeColumnByKey("id");
+
+        var cols = crud.getGrid().getColumns();
+        crud.getGrid().setColumnOrder(cols.stream().filter(s -> s.getKey().equals("name")).findFirst().get(),
+                cols.stream().filter(s -> s.getKey().equals("birthDate")).findFirst().get(),
+                cols.stream().filter(s -> s.getKey().equals("image")).findFirst().get(),
+                cols.stream().filter(s -> s.getKey().equals("vaadin-crud-edit-column")).findFirst().get());
+
         crud.addThemeVariants(CrudVariant.NO_BORDER);
         contentDiv.add(head, exp, crud);
 
+        add(contentDiv);
 
     }
 
     private CrudEditor<Person> createPersonEditor() {
         TextField name = new TextField("Name");
         DatePicker birth = new DatePicker("Geburtsdatum");
+        var rec = new FileBuffer();
+        Upload pic = new Upload(rec);
+
+
         FormLayout form = new FormLayout(name, birth);
+        form.addFormItem(pic, new Label("Bild"));
 
         Binder<Person> binder = new Binder<>(Person.class);
         binder.bind(name, Person::getName, Person::setName);
         binder.bind(birth, Person::getBirthDate, Person::setBirthDate);
+
+        if (binder.getBean() == null)
+            binder.setBean(new Person());
+        pic.addSucceededListener(l -> {
+            var f = new File();
+            f.setCreated(LocalDate.now());
+            f.setName(l.getFileName());
+            f.setMimeType(l.getMIMEType());
+            File toRemove = null;
+            if (binder.getBean().getImage() != null) {
+                toRemove = binder.getBean().getImage();
+            }
+            store.setContent(f, rec.getInputStream());
+            fileService.save(f);
+            binder.getBean().setImage(f);
+
+            if (toRemove != null) {
+                fileService.delete(toRemove);
+                store.unsetContent(toRemove);
+
+            }
+        });
+
 
         return new BinderCrudEditor<>(binder, form);
     }
 
     private void deleteContent() {
 
-        if (contentDiv != null)
+        if (contentDiv != null) {
             remove(contentDiv);
+        }
+        contentDiv = new Div();
     }
 
     private Div contentDiv;
@@ -135,10 +190,13 @@ public class AccountView extends VerticalLayout {
         crud.addSaveListener(e -> categoryDataProvider.persist(e.getItem()));
         crud.addDeleteListener(e -> categoryDataProvider.delete(e.getItem()));
 
-        crud.getGrid().removeColumnByKey("Id");
+
+        crud.getGrid().removeColumnByKey("id");
+        crud.getGrid().removeColumnByKey("onDemands");
         crud.addThemeVariants(CrudVariant.NO_BORDER);
         contentDiv.add(head, exp, crud);
 
+        add(contentDiv);
 
     }
 
@@ -148,7 +206,9 @@ public class AccountView extends VerticalLayout {
         parent.setItemLabelGenerator(Category::getName);
         parent.setItems(categoryDataProvider.fetch(new Query<>()));
 
+
         FormLayout form = new FormLayout(name, parent);
+
 
         Binder<Category> binder = new Binder<>(Category.class);
         binder.bind(name, Category::getName, Category::setName);
@@ -160,7 +220,6 @@ public class AccountView extends VerticalLayout {
     private void initAccount(ClickEvent<MenuItem> menuItemClickEvent) {
         deleteContent();
 
-        contentDiv = new Div();
 
         var username = new TextField("Benutzername", user.getUsername(), "Benutzername");
         contentDiv.add(username);
@@ -182,9 +241,10 @@ public class AccountView extends VerticalLayout {
             f.setMimeType(l.getMIMEType());
             f.setCreated(LocalDate.now());
             f.setName(l.getFileName());
+
+            File picToUnset = null;
             if (user.getProfile_pic() != null) {
-                store.unsetContent(user.getProfile_pic());
-                fileService.delete(user.getProfile_pic());
+                picToUnset = user.getProfile_pic();
             }
             store.setContent(f, rec.getInputStream());
             user.setProfile_pic(f);
@@ -194,6 +254,10 @@ public class AccountView extends VerticalLayout {
 
             img.setSrc("/files/" + user.getProfile_pic().getId());
 
+            if (picToUnset != null) {
+                store.unsetContent(picToUnset);
+                fileService.delete(picToUnset);
+            }
         });
 
         Button saveBtn = new Button("Speichern");
@@ -210,4 +274,22 @@ public class AccountView extends VerticalLayout {
     }
 
 
+}
+
+class PersonComparator implements Comparator<Grid.Column<Person>> {
+
+    static Map<String, Integer> ordering = new HashMap<>();
+
+    static {
+        ordering.put("name", 0);
+        ordering.put("birthDate", 1);
+        ordering.put("image", 2);
+        ordering.put("vaadin-crud-edit-column", 3);
+
+    }
+
+    @Override
+    public int compare(Grid.Column<Person> o1, Grid.Column<Person> o2) {
+        return ordering.get(o1.getKey()).compareTo(ordering.get(o2.getKey()));
+    }
 }

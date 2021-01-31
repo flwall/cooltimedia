@@ -99,7 +99,12 @@ public class MovieForm extends AbstractForm<Movie> {
         category.setItems(categoryService.findAll());
 
 
-        add(title, summary, streamLabel, stream, publishDate, thumbnailLabel, thumbnail, author, category, createButtonsLayout());
+        add(title, summary);
+        addFormItem(stream, streamLabel);
+        add(publishDate);
+        addFormItem(thumbnail, thumbnailLabel);
+        add(author, category, createButtonsLayout());
+
 
     }
 

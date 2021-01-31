@@ -5,6 +5,7 @@ import com.vaadin.flow.data.provider.AbstractDataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.service.PersonService;
 
