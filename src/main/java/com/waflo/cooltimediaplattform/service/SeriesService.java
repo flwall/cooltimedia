@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 @Service
-public class SeriesRating {
+public class SeriesService {
 
     private final SeriesRepository seriesRepository;
 
-    public SeriesRating(SeriesRepository seriesRepository) {
+    public SeriesService(SeriesRepository seriesRepository) {
         this.seriesRepository = seriesRepository;
     }
 

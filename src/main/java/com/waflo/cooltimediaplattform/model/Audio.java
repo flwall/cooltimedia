@@ -13,17 +13,14 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Audio extends Media {
+public class Audio extends OnDemand {
 
     @NotEmpty
     private String title;
 
-    @ManyToOne
-    private Person creator;
-
     @OneToOne
     private File audio;
 
-    @PastOrPresent LocalDate creation;
+    @PastOrPresent LocalDate publishDate;
 
 }

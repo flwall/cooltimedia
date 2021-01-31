@@ -20,8 +20,12 @@ public class FileService {
         return fileRepository.findById(id);
     }
 
-    public void add(File f) {
-        fileRepository.save(f);
+    public File save(File f) {
+        return fileRepository.save(f);
 
+    }
+
+    public void delete(File f) {
+        fileRepository.delete(f);
     }
 }

@@ -1,6 +1,5 @@
 package com.waflo.cooltimediaplattform.service;
 
-import com.waflo.cooltimediaplattform.model.Category;
 import com.waflo.cooltimediaplattform.model.Document;
 import com.waflo.cooltimediaplattform.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -24,5 +23,9 @@ public class DocumentService {
 
     public Optional<Document> findById(long id) {
         return documentRepository.findById(id);
+    }
+
+    public Document save(Document entity) {
+        return documentRepository.save(entity);
     }
 }

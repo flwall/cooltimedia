@@ -24,9 +24,9 @@ public class UserSession implements Serializable {
 
     public User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication.getPrincipal() instanceof OAuth2AuthenticatedPrincipal)){
+        if (!(authentication.getPrincipal() instanceof OAuth2AuthenticatedPrincipal)) {
             LoggerFactory.getLogger(getClass().getName()).error(authentication.getPrincipal().toString());
-            return null;
+            return new User();
         }
         OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
         var u = userService.findByOauthId(principal.getName());

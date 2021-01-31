@@ -1,4 +1,4 @@
-package com.waflo.cooltimediaplattform.ui.views;
+package com.waflo.cooltimediaplattform.ui.views.movies;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Text;

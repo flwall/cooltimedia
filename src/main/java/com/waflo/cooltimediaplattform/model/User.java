@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -24,6 +25,9 @@ public class User {
     @Email
     @NotEmpty
     private String email;
+
+    @OneToOne
+    private File profile_pic;
 
     public User() {
     }

@@ -2,7 +2,12 @@ package com.waflo.cooltimediaplattform.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.Size;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -15,6 +20,6 @@ public class Media {
 
     //list of use m-n
     @ManyToMany
-    List<User> owner;
+    List<User> owner=new LinkedList<>();
 
 }

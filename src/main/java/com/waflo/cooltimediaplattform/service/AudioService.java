@@ -19,4 +19,8 @@ public class AudioService {
     public List<Audio> findAll() {
         return audioRepository.findAll();
     }
+
+    public Audio save(Audio entity) {
+        return audioRepository.save(entity);
+    }
 }
