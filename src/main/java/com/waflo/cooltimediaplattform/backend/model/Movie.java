@@ -33,4 +33,7 @@ public class Movie extends OnDemand {
     private File thumbnail;
 
 
+    public String toString(){
+        return title;
+    }
 }

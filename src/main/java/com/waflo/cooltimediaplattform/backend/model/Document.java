@@ -27,4 +27,8 @@ public class Document extends OnDemand {
     @NotNull
     private File document;
 
+    @Override
+    public String toString(){
+        return title;
+    }
 }

@@ -16,18 +16,23 @@ import java.util.List;
 @Data
 @Entity
 public class Series extends Media {
-@NotEmpty
+    @NotEmpty
     private String name;
 
-private String summary;
+    private String summary;
     @OneToMany
     List<Season> seasons;
 
-@PastOrPresent
+    @PastOrPresent
     LocalDate creationDate;
     @OneToOne
     @NotNull
     private File thumbnail;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
 
 }

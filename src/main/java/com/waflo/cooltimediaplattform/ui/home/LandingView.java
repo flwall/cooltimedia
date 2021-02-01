@@ -1,10 +1,8 @@
 package com.waflo.cooltimediaplattform.ui.home;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -17,7 +15,7 @@ public class LandingView extends VerticalLayout {
 
     public LandingView() {
         if (SecurityUtils.isUserLoggedIn()) {
-            UI.getCurrent().navigate(HomeView.class);
+            UI.getCurrent().navigate("home");
 
         }
         init();

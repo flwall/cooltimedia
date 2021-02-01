@@ -22,4 +22,8 @@ public class Audio extends OnDemand {
 
     @PastOrPresent LocalDate publishDate;
 
+    @Override
+    public String toString(){
+        return title;
+    }
 }

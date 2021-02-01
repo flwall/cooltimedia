@@ -17,6 +17,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven{
+        url "https://maven.vaadin.com/vaadin-addons"
+    }
 
 }
 
@@ -34,6 +37,8 @@ dependencies {
 
     implementation 'com.github.paulcwarren:spring-content-fs-boot-starter:1.2.0'
     implementation 'com.github.paulcwarren:spring-content-rest-boot-starter:1.2.0'
+
+    implementation 'com.vaadin.componentfactory:autocomplete:2.3.1'
 
     compileOnly 'org.projectlombok:lombok'
 
