@@ -1,5 +1,8 @@
 package com.waflo.cooltimediaplattform.ui.component.search;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.router.Router;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.waflo.cooltimediaplattform.backend.model.*;
 import com.waflo.cooltimediaplattform.ui.component.search.receiver.IReceiver;
@@ -36,10 +39,10 @@ public class MediaSearchCommand implements ISearchCommand<Media> {
 
     @Override
     public Optional<String> getResultURI(Media result) {
-        if(result instanceof Audio)return Optional.of("/audio/"+result.getId());
-        if(result instanceof Document)return Optional.of("/document/"+result.getId());
-        if(result instanceof Series)return Optional.of("/serie/"+result.getId());
-        if(result instanceof Movie)return Optional.of("/movie/"+result.getId());
+        if(result instanceof Audio)return Optional.of("audio/"+result.getId());
+        if(result instanceof Document)return Optional.of("document/"+result.getId());
+        if(result instanceof Series)return Optional.of("serie/"+result.getId());
+        if(result instanceof Movie)return Optional.of("movie/"+result.getId());
 
         return Optional.empty();
     }

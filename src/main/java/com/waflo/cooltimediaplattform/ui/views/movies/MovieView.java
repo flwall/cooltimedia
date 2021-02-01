@@ -37,6 +37,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
     }
 
     private void initMovieDetail() {
+        removeAll();
 
         var layout = new HorizontalLayout();
         var div = new Div(new H1(movie.getTitle()), new Text(movie.getSummary()));
@@ -58,6 +59,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
         img.setHeight("256px");
         layout.add(div, img);
         add(layout, watchButton);
+
     }
 
     private void watchVideo(ClickEvent<Button> buttonClickEvent) {

@@ -15,7 +15,6 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.waflo.cooltimediaplattform.backend.model.Media;
-import com.waflo.cooltimediaplattform.backend.model.OnDemand;
 import com.waflo.cooltimediaplattform.backend.security.SecurityUtils;
 import com.waflo.cooltimediaplattform.ui.component.search.MediaSearchCommand;
 
