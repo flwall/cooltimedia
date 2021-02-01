@@ -38,7 +38,7 @@ public class SeriesView extends AbstractEntitiesView<Series> {
     ListComponent<SeriesCardCommand> seriesList;
 
     private void initView() {
-        add(new H1("Filme"));
+        add(new H1("Serien"));
         seriesList = new ListComponent<>();
 
         initList();

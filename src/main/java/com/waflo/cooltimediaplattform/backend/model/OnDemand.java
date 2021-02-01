@@ -19,8 +19,8 @@ public class OnDemand extends Media {
     @ManyToMany
     private Set<Person> actors;
 
-    @OneToMany
-    private List<Rating> ratings;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Rating> ratings;
 
     @ManyToOne
     @JoinColumn(name = "fk_category")

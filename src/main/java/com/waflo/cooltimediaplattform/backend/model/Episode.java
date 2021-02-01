@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
@@ -18,13 +19,12 @@ public class Episode extends Media {
     private String title;
 
     @OneToOne
-            @NotNull
+    @NotNull
     File stream;
 
-    @OneToMany
+    @OneToMany()
     private List<Rating> ratings;
-    @OneToMany
-    private List<Comment> comments;
+
 
 
 }

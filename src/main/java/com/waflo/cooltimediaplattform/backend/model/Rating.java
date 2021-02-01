@@ -17,6 +17,7 @@ public class Rating {
     @Min(0)
     @Max(5)
     private int rating;         ///0-5
+    private String comment;
     @ManyToOne
     @JoinColumn(name = "fk_creator")
     private User creator;
