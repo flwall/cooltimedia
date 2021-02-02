@@ -12,22 +12,27 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
+import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
 import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
 import com.waflo.cooltimediaplattform.backend.service.FileService;
+import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.AudioPlayer;
+import org.springframework.security.access.annotation.Secured;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
+@Route(value = "audio", layout = MainLayout.class)
+@Secured("ROLE_USER")
 public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
 
     private Audio audio;
     private final AudioService audioService;
-    private FileService fileService;
-    private FileContentStore store;
+    private final FileService fileService;
+    private final FileContentStore store;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public AudioView(AudioService service, FileService fileService, FileContentStore store) {
@@ -63,8 +68,10 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
 
         var delBtn = new Button("Löschen", l -> {
             store.unsetContent(audio.getAudio());
-            fileService.delete(audio.getAudio());
+
             audioService.delete(audio);
+            fileService.delete(audio.getAudio());
+
             audio = null;
             back.click();
         });

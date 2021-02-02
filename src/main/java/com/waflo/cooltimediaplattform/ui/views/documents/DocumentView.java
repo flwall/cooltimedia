@@ -72,8 +72,9 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         var delBtn = new Button("Löschen", l -> {
 
             contentStore.unsetContent(doc.getDocument());
-            fileService.delete(doc.getDocument());
             documentService.delete(doc);
+            fileService.delete(doc.getDocument());
+
             backbtn.click();
 
         });
@@ -86,6 +87,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             var rec = new FileBuffer();
 
             var upl = new Upload(rec);
+            upl.setAcceptedFileTypes("text/*", "application/pdf", "application/*");
             upl.addSucceededListener(l -> {
                 var f = new com.waflo.cooltimediaplattform.backend.model.File();
                 f.setMimeType(l.getMIMEType());

@@ -13,10 +13,16 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.waflo.cooltimediaplattform.backend.model.*;
+import com.waflo.cooltimediaplattform.backend.model.Category;
+import com.waflo.cooltimediaplattform.backend.model.Document;
+import com.waflo.cooltimediaplattform.backend.model.File;
+import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
-import com.waflo.cooltimediaplattform.backend.service.*;
+import com.waflo.cooltimediaplattform.backend.service.CategoryService;
+import com.waflo.cooltimediaplattform.backend.service.DocumentService;
+import com.waflo.cooltimediaplattform.backend.service.FileService;
+import com.waflo.cooltimediaplattform.backend.service.PersonService;
 import com.waflo.cooltimediaplattform.ui.component.AbstractForm;
 import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
@@ -27,14 +33,13 @@ import java.time.LocalDate;
 @SpringComponent
 @UIScope
 public class DocumentForm extends AbstractForm<Document> {
-    private final ComboBox<Person> author=new ComboBox<>("Author");
+    private final ComboBox<Person> author = new ComboBox<>("Author");
     TextField title = new TextField("Titel");
     TextArea summary = new TextArea("Zusammenfassung");
     Upload document;
 
     DatePicker publishDate = new DatePicker("Veröffentlicht am: ");
     Label documentLabel = new Label("Dokument: ");
-
 
 
     ComboBox<Category> category = new ComboBox<>("Kategorie");
@@ -54,7 +59,7 @@ public class DocumentForm extends AbstractForm<Document> {
 
         var rec = new FileBuffer();
         document = new Upload(rec);
-        document.setAcceptedFileTypes("application/pdf", "application/msword", "text/plain");
+        document.setAcceptedFileTypes("application/pdf", "application/msword", "text/plain", "application/*");
 
         document.setId("document-upload");
         documentLabel.setFor(document);
