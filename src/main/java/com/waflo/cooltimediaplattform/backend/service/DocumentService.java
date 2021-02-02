@@ -28,4 +28,8 @@ public class DocumentService {
     public Document save(Document entity) {
         return documentRepository.save(entity);
     }
+
+    public void delete(Document doc) {
+        documentRepository.delete(doc);
+    }
 }

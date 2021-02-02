@@ -69,7 +69,15 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         var left = new VerticalLayout(head, sum, label, pDate, authorLabel, author);
         var h = new H2("Kommentare");
 
-        var right = new VerticalLayout(h);
+        var delBtn = new Button("Löschen", l -> {
+
+            contentStore.unsetContent(doc.getDocument());
+            fileService.delete(doc.getDocument());
+            documentService.delete(doc);
+            backbtn.click();
+
+        });
+        var right = new VerticalLayout(h, delBtn);
 
         var content = new HorizontalLayout(left, right);
 
@@ -99,7 +107,6 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             var ok = new Button("OK", b -> dialog.close());
             dialog.add(ok);
             dialog.open();
-
         });
 
         var download = new Button(new Anchor("/files/" + doc.getDocument().getId(), "Herunterladen"));

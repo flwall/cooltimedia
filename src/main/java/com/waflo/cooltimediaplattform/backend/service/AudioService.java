@@ -5,6 +5,7 @@ import com.waflo.cooltimediaplattform.backend.repository.AudioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AudioService {
@@ -22,5 +23,13 @@ public class AudioService {
 
     public Audio save(Audio entity) {
         return audioRepository.save(entity);
+    }
+
+    public Optional<Audio> findById(Long parameter) {
+        return audioRepository.findById(parameter);
+    }
+
+    public void delete(Audio audio) {
+        audioRepository.delete(audio);
     }
 }
