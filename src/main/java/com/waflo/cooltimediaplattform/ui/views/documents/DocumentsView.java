@@ -29,7 +29,7 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
         super(form);
         this.documentService = documentService;
         this.userSession = userSession;
-        this.entities = documentService.findAll();
+        this.entities = documentService.findAllByUser(userSession.getUser().getId());
 
 
         initView();
@@ -57,6 +57,6 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
 
     @Override
     protected void initList() {
-        documentList.initUI(documentService.findAll().stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
+        documentList.initUI(documentService.findAllByUser(userSession.getUser().getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
     }
 }

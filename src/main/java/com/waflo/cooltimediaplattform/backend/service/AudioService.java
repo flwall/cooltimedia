@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AudioService {
@@ -31,5 +32,9 @@ public class AudioService {
 
     public void delete(Audio audio) {
         audioRepository.delete(audio);
+    }
+
+    public List<Audio> findAllByUser(long userId) {
+        return audioRepository.findAll().stream().filter(a -> a.getOwner().stream().anyMatch(o -> o.getId() == userId)).collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.waflo.cooltimediaplattform.backend.model.Category;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.CategoryService;
 
 import java.lang.reflect.Field;
@@ -15,10 +16,12 @@ import java.util.stream.Stream;
 
 @SpringComponent
 public class CategoryDataProvider extends AbstractDataProvider<Category, CrudFilter> {
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+    private final UserSession session;
 
-    public CategoryDataProvider(CategoryService categoryService) {
+    public CategoryDataProvider(CategoryService categoryService, UserSession session) {
         this.categoryService = categoryService;
+        this.session = session;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class CategoryDataProvider extends AbstractDataProvider<Category, CrudFil
         int offset = query.getOffset();
         int limit = query.getLimit();
 
-        Stream<Category> stream = categoryService.findAll().stream();       //find only for appropriate user
+        Stream<Category> stream = categoryService.findAllByUser(session.getUser().getId()).stream();       //find only for appropriate user
 
         if (query.getFilter().isPresent()) {
             stream = stream

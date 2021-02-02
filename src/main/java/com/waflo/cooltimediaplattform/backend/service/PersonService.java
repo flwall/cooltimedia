@@ -1,11 +1,13 @@
 package com.waflo.cooltimediaplattform.backend.service;
 
+import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.repository.PersonRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
@@ -30,5 +32,9 @@ public class PersonService {
 
     public void delete(Person item) {
         repository.delete(item);
+    }
+
+    public List<Person> findAllByUser(long userId) {
+        return repository.findAll().stream().filter(a -> a.getOwner().stream().anyMatch(o -> o.getId() == userId)).collect(Collectors.toList());
     }
 }

@@ -78,15 +78,14 @@ public class DocumentForm extends AbstractForm<Document> {
 
 
         author.setItemLabelGenerator(Person::getName);
-        author.setItems(personService.findAll());
+        author.setItems(personService.findAllByUser(userSession.getUser().getId()));
         category.setItemLabelGenerator(Category::getName);
-        category.setItems(categoryService.findAll());
+        category.setItems(categoryService.findAllByUser(userSession.getUser().getId()));
 
 
         add(title, summary, documentLabel, document, publishDate, author, category, createButtonsLayout());
 
     }
-
 
     @Override
     protected void onSaveClick(ClickEvent<Button> buttonClickEvent) {

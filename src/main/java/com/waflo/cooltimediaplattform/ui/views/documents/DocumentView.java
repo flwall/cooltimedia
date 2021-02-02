@@ -111,7 +111,8 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             dialog.open();
         });
 
-        var download = new Button(new Anchor("/files/" + doc.getDocument().getId(), "Herunterladen"));
+        var download = new Anchor("/files/" + doc.getDocument().getName(), "Herunterladen");
+        
         download.getElement().setAttribute("download", true);
 
         var btns = new Div(download, upload);

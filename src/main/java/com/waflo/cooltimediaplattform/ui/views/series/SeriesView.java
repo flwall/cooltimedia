@@ -30,7 +30,7 @@ public class SeriesView extends AbstractEntitiesView<Series> {
         super(form);
         this.session = session;
         this.seriesService = seriesService;
-        this.entities=seriesService.findAll();           //replace by Movies where User is owner
+        this.entities=seriesService.findAllByUser(session.getUser().getId());           //replace by Movies where User is owner
 
         initView();
     }
@@ -57,6 +57,6 @@ public class SeriesView extends AbstractEntitiesView<Series> {
 
     @Override
     protected void initList() {
-        seriesList.initUI(seriesService.findAll().stream().map(SeriesCardCommand::new).collect(Collectors.toList()));
+        seriesList.initUI(seriesService.findAllByUser(session.getUser().getId()).stream().map(SeriesCardCommand::new).collect(Collectors.toList()));
     }
 }

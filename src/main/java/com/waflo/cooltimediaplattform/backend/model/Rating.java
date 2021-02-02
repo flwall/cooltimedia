@@ -1,7 +1,6 @@
 package com.waflo.cooltimediaplattform.backend.model;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

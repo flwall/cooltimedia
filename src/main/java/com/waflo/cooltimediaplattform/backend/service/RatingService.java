@@ -23,4 +23,6 @@ public class RatingService {
     public Optional<Rating> findById(long id) {
         return ratingRepository.findById(id);
     }
+
+
 }

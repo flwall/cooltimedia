@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'com.github.paulcwarren:spring-content-fs-boot-starter:1.2.0'
-    implementation 'com.github.paulcwarren:spring-content-rest-boot-starter:1.2.0'
+   // implementation 'com.github.paulcwarren:spring-content-rest-boot-starter:1.2.0'
 
     implementation 'com.vaadin.componentfactory:autocomplete:2.3.1'
 

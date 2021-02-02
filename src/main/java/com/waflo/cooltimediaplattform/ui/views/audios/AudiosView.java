@@ -29,7 +29,7 @@ public class AudiosView extends AbstractEntitiesView<Audio> {
         super(form);
         this.audioService = audioService;
         this.userSession = userSession;
-        this.entities = audioService.findAll();
+        this.entities = audioService.findAllByUser(userSession.getUser().getId());
 
 
         initView();
@@ -57,6 +57,6 @@ public class AudiosView extends AbstractEntitiesView<Audio> {
 
     @Override
     protected void initList() {
-        audioList.initUI(audioService.findAll().stream().map(AudioCardCommand::new).collect(Collectors.toList()));
+        audioList.initUI(audioService.findAllByUser(userSession.getUser().getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
     }
 }

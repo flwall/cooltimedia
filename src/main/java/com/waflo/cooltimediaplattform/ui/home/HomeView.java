@@ -50,22 +50,22 @@ public class HomeView extends VerticalLayout {
         add(new H1("Guten Tag, " + userSession.getUser().getUsername()));
         add(new H2("Deine Filme"));
         ListComponent<MovieCardCommand> movies = new ListComponent<>();
-        movies.initUI(movieService.findAll().stream().map(MovieCardCommand::new).collect(Collectors.toList()));
+        movies.initUI(movieService.findAllByUser(user.getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
         add(movies);
 
         add(new H2("Deine Serien"));
         ListComponent<SeriesCardCommand> series = new ListComponent<>();
-        series.initUI(seriesService.findAll().stream().map(SeriesCardCommand::new).collect(Collectors.toList()));
+        series.initUI(seriesService.findAllByUser(user.getId()).stream().map(SeriesCardCommand::new).collect(Collectors.toList()));
         add(series);
 
         add(new H2("Deine Dokumente"));
         ListComponent<DocumentCardCommand> documents = new ListComponent<>();
-        documents.initUI(documentService.findAll().stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
+        documents.initUI(documentService.findAllByUser(user.getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
         add(documents);
 
         add(new H2("Deine Audios"));
         ListComponent<AudioCardCommand> audios=new ListComponent<>();
-        audios.initUI(audioService.findAll().stream().map(AudioCardCommand::new).collect(Collectors.toList()));
+        audios.initUI(audioService.findAllByUser(user.getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
         add(audios);
     }
 

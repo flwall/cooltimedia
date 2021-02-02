@@ -11,7 +11,6 @@ import com.vaadin.flow.component.crud.CrudEditor;
 import com.vaadin.flow.component.crud.CrudVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -38,9 +37,6 @@ import com.waflo.cooltimediaplattform.ui.data.PersonDataProvider;
 import org.springframework.security.access.annotation.Secured;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 @Route(value = "account", layout = MainLayout.class)
 @Secured("ROLE_USER")
@@ -79,7 +75,10 @@ public class AccountView extends VerticalLayout {
         var exp = new Text("Hier kannst du persönliche Authoren definieren, welche du später als Authoren/Schauspieler bei deinen Medien festlegen kannst.");
 
         Crud<Person> crud = new Crud<>(Person.class, createPersonEditor());
-
+        crud.addSaveListener(l -> {
+            l.getItem().getOwner().add(user);
+            //maybe associate image too when possible
+        });
 
         crud.setDataProvider(personDataProvider);
         crud.addSaveListener(e -> personDataProvider.persist(e.getItem()));
@@ -91,7 +90,7 @@ public class AccountView extends VerticalLayout {
             var img = person.getImage();
             if (img == null) return new Div();
 
-            var comp = new Image("/files/" + img.getId(), "Pic");
+            var comp = new Image("/files/" + img.getName(), "Pic");
             comp.setWidth("48px");
             comp.setHeight("48px");
             return comp;
@@ -99,6 +98,7 @@ public class AccountView extends VerticalLayout {
 
 
         crud.getGrid().removeColumnByKey("id");
+        crud.getGrid().removeColumnByKey("owner");
 
         var cols = crud.getGrid().getColumns();
         crud.getGrid().setColumnOrder(cols.stream().filter(s -> s.getKey().equals("name")).findFirst().get(),
@@ -184,6 +184,7 @@ public class AccountView extends VerticalLayout {
         var exp = new Text("Hier kannst du persönliche Kategorien definieren, welche du später zur Kategorisierung deiner Medien verwenden kannst.");
 
         Crud<Category> crud = new Crud<>(Category.class, createCategoryEditor());
+        crud.addSaveListener(c -> c.getItem().getOwner().add(user));
 
 
         crud.setDataProvider(categoryDataProvider);
@@ -192,6 +193,7 @@ public class AccountView extends VerticalLayout {
 
 
         crud.getGrid().removeColumnByKey("id");
+        crud.getGrid().removeColumnByKey("owner");
         crud.getGrid().removeColumnByKey("onDemands");
         crud.addThemeVariants(CrudVariant.NO_BORDER);
         contentDiv.add(head, exp, crud);
@@ -214,7 +216,10 @@ public class AccountView extends VerticalLayout {
         binder.bind(name, Category::getName, Category::setName);
         binder.bind(parent, Category::getParentCategory, Category::setParentCategory);
 
-        return new BinderCrudEditor<>(binder, form);
+
+        var editor = new BinderCrudEditor<>(binder, form);
+
+        return editor;
     }
 
     private void initAccount(ClickEvent<MenuItem> menuItemClickEvent) {
@@ -225,7 +230,7 @@ public class AccountView extends VerticalLayout {
         contentDiv.add(username);
         final Image img;
         if (user.getProfile_pic() != null) {
-            img = new Image("/files/" + user.getProfile_pic().getId(), "Profilbild");
+            img = new Image("/files/" + user.getProfile_pic().getName(), "Profilbild");
 
         } else
             img = new Image();
@@ -252,7 +257,7 @@ public class AccountView extends VerticalLayout {
             userService.save(user);
 
 
-            img.setSrc("/files/" + user.getProfile_pic().getId());
+            img.setSrc("/files/" + user.getProfile_pic().getName());
 
             if (picToUnset != null) {
                 store.unsetContent(picToUnset);
@@ -274,22 +279,4 @@ public class AccountView extends VerticalLayout {
     }
 
 
-}
-
-class PersonComparator implements Comparator<Grid.Column<Person>> {
-
-    static Map<String, Integer> ordering = new HashMap<>();
-
-    static {
-        ordering.put("name", 0);
-        ordering.put("birthDate", 1);
-        ordering.put("image", 2);
-        ordering.put("vaadin-crud-edit-column", 3);
-
-    }
-
-    @Override
-    public int compare(Grid.Column<Person> o1, Grid.Column<Person> o2) {
-        return ordering.get(o1.getKey()).compareTo(ordering.get(o2.getKey()));
-    }
 }

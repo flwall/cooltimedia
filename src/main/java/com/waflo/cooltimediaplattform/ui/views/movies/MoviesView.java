@@ -33,7 +33,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
         super(form);
         this.session = session;
         this.movieService = movieService;
-        this.entities=movieService.findAll();           //replace by Movies where User is owner
+        this.entities=movieService.findAllByUser(session.getUser().getId());           //replace by Movies where User is owner
 
         initView();
     }
@@ -67,7 +67,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
 
     @Override
     protected void initList() {
-        movieList.initUI(movieService.findAll().stream().map(MovieCardCommand::new).collect(Collectors.toList()));
+        movieList.initUI(movieService.findAllByUser(session.getUser().getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
     }
 
 

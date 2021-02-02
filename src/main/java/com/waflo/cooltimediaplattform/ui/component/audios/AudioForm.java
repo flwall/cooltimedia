@@ -76,9 +76,9 @@ public class AudioForm extends AbstractForm<Audio> {
 
 
         author.setItemLabelGenerator(Person::getName);
-        author.setItems(personService.findAll());
+        author.setItems(personService.findAllByUser(userSession.getUser().getId()));
         category.setItemLabelGenerator(Category::getName);
-        category.setItems(categoryService.findAll());
+        category.setItems(categoryService.findAllByUser(userSession.getUser().getId()));
 
 
         add(title, audioLabel, audio, publishDate, author, category, createButtonsLayout());

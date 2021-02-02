@@ -7,6 +7,7 @@ import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.waflo.cooltimediaplattform.backend.model.Person;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.PersonService;
 
 import java.lang.reflect.Field;
@@ -17,11 +18,13 @@ import java.util.stream.Stream;
 @SpringComponent
 public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter> {
 
-    private PersonService personService;
+    private final PersonService personService;
+    private final UserSession session;
 
-    public PersonDataProvider(PersonService personService) {
+    public PersonDataProvider(PersonService personService, UserSession session) {
 
         this.personService = personService;
+        this.session = session;
     }
 
 
@@ -40,7 +43,7 @@ public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter>
         int offset = query.getOffset();
         int limit = query.getLimit();
 
-        Stream<Person> stream = personService.findAll().stream();       //find only for appropriate user
+        Stream<Person> stream = personService.findAllByUser(session.getUser().getId()).stream();       //find only for appropriate user
 
         if (query.getFilter().isPresent()) {
             stream = stream

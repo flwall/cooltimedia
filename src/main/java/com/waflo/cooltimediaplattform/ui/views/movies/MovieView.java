@@ -49,7 +49,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
         div.setId(movie.getId() + "");
 
         var left = new VerticalLayout();
-        var img = movie.getThumbnail() == null ? new Image("/imgs/default.jpg", "Kein Bild vorhanden") : new Image("/files/" + movie.getThumbnail().getId(), "Thumbnail");
+        var img = movie.getThumbnail() == null ? new Image("/imgs/default.jpg", "Kein Bild vorhanden") : new Image("/files/" + movie.getThumbnail().getName(), "Thumbnail");
         img.setWidth("768px");
         img.setHeight("432px");
         left.add(new H3("Film-Details"), img);
@@ -119,7 +119,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
 
 
         var head = new H1(movie.getTitle());
-        var vid = new Video("/files/" + movie.getStream().getId());
+        var vid = new Video("/files/" + movie.getStream().getName());
         videoContainer = new Div(head, vid);
         add(videoContainer);
 

@@ -94,9 +94,9 @@ public class MovieForm extends AbstractForm<Movie> {
         thumbnailLabel.setFor(thumbnail);
 
         author.setItemLabelGenerator(Person::getName);
-        author.setItems(personService.findAll());
+        author.setItems(personService.findAllByUser(userSession.getUser().getId()));
         category.setItemLabelGenerator(Category::getName);
-        category.setItems(categoryService.findAll());
+        category.setItems(categoryService.findAllByUser(userSession.getUser().getId()));
 
 
         add(title, summary);
@@ -114,7 +114,7 @@ public class MovieForm extends AbstractForm<Movie> {
         try {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
-            movieService.add(entity);
+            movieService.save(entity);
             fireEvent(new SaveEvent(this, false));
         } catch (ValidationException e) {
             fireEvent(new ValidationFailedEvent(this));

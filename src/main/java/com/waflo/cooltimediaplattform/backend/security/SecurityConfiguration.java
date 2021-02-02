@@ -1,6 +1,7 @@
 package com.waflo.cooltimediaplattform.backend.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,10 +10,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String LOGIN_URL = "/login";
-
 
     private final LogoutHandler logoutHandler;
 
@@ -42,8 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Configure the login page.
                 .and().oauth2Login()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .addLogoutHandler(logoutHandler)
-        ;
+                .addLogoutHandler(logoutHandler);
     }
 
 

@@ -63,7 +63,7 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
         genre.setId("genre");
         gLabel.setFor(genre);
         var aud = new AudioPlayer();
-        aud.setSource("/files/" + audio.getAudio().getId());
+        aud.setSource("/files/" + audio.getAudio().getName());
         var left = new VerticalLayout(head, pLabel, pDate, gLabel, genre, aud);
 
         var delBtn = new Button("Löschen", l -> {

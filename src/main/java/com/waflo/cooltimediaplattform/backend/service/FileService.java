@@ -28,4 +28,11 @@ public class FileService {
     public void delete(File f) {
         fileRepository.delete(f);
     }
+
+    public Optional<File> findByFileName(String fname) {
+        return fileRepository.findAll().stream().filter(f -> f.getName().equals(fname)).findFirst();      //TODO: duplicate files would be a problem
+
+    }
+
+
 }
