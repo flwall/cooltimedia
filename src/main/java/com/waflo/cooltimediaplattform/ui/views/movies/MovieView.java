@@ -82,15 +82,22 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private VerticalLayout initMidContainer() {
+        var layout=new VerticalLayout();
+        if (movie.getPublishDate() != null) {
+
         var publishDate = new Paragraph(movie.getPublishDate().format(formatter));
         publishDate.setId("pdate");
         var publishLabel = new Label("Erschienen");
         publishLabel.setFor(publishDate);
-
-        var genre = new Paragraph(movie.getCategory().getName());
-        genre.setId("genre");
-        var genreLabel = new Label("Genre");
-        genreLabel.setFor(genre);
+layout.add(publishLabel,publishDate);
+        }
+        if(movie.getCategory()!= null) {
+            var genre = new Paragraph(movie.getCategory().getName());
+            genre.setId("genre");
+            var genreLabel = new Label("Genre");
+            genreLabel.setFor(genre);
+            layout.add(genreLabel, genre);
+        }
 
         var summary = new Paragraph(movie.getSummary());
         summary.setId("summary");
@@ -98,8 +105,9 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
         summaryLabel.setFor(summary);
 
 
-        return new VerticalLayout(publishLabel, publishDate, genreLabel, genre, summaryLabel,
+        layout.add( summaryLabel,
                 summary, new Button("Ansehen", this::watchVideo));
+        return layout;
 
     }
 

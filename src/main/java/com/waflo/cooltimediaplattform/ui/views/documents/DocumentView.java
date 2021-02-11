@@ -60,13 +60,18 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         pDate.setId("pDate");
         label.setFor(pDate);
 
-        var author = new Paragraph(doc.getAuthor().getName());
-        var authorLabel = new Label("Bearbeiter");
-        author.setId("author");
-        authorLabel.setFor(author);
+        var left = new VerticalLayout(head, sum, label, pDate);
+
+        if (doc.getAuthor() != null) {
+            var author = new Paragraph(doc.getAuthor().getName());
+            var authorLabel = new Label("Bearbeiter");
+            author.setId("author");
+            authorLabel.setFor(author);
+
+            left.add(authorLabel, author);
+        }
 
 
-        var left = new VerticalLayout(head, sum, label, pDate, authorLabel, author);
         var h = new H2("Kommentare");
 
         var delBtn = new Button("Löschen", l -> {
@@ -112,7 +117,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         });
 
         var download = new Anchor("/files/" + doc.getDocument().getName(), "Herunterladen");
-        
+
         download.getElement().setAttribute("download", true);
 
         var btns = new Div(download, upload);

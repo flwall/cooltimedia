@@ -9,8 +9,6 @@ services:
       - MYSQL_DATABASE=cooltimediadb
       - MYSQL_USER=cooltimedia
       - MYSQL_PASSWORD=pass1234
-    ports:
-      - 3333:3306
 
   myapp-main:
     build:

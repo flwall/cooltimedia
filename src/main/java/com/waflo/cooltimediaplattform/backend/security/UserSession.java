@@ -33,7 +33,7 @@ public class UserSession implements Serializable {
         if (u.isPresent()) return u.get();
 
 
-        var newUser = new User(principal.getName(), principal.getAttribute("given_name"), principal.getAttribute("email"));
+        var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
         return userService.save(newUser);
     }
 

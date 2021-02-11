@@ -15,14 +15,13 @@ public class LandingView extends VerticalLayout {
 
     public LandingView() {
         if (SecurityUtils.isUserLoggedIn()) {
-            UI.getCurrent().navigate("home");
+            UI.getCurrent().getPage().setLocation("/home");
 
         }
         init();
     }
 
     private void init() {
-
 
         var head = new H1("Cooltimedia");
         var sub = new H3("Multimedien verwalten einfach gemacht mit Cooltimedia!");

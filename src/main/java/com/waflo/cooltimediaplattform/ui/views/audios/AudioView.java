@@ -52,19 +52,25 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
         var back = new Button("<-", l -> UI.getCurrent().getPage().getHistory().back());
         var title = new H1(audio.getTitle());
         var head = new HorizontalLayout(back, title);
+        var left = new VerticalLayout(head);
+        if (audio.getPublishDate() != null) {
+            Label pLabel = new Label("Veröffentlichungsdatum");
+            var pDate = new Paragraph(audio.getPublishDate().format(formatter));
+            pDate.setId("pdate");
+            pLabel.setFor(pDate);
 
-
-        Label pLabel = new Label("Veröffentlichungsdatum");
-        var pDate = new Paragraph(audio.getPublishDate().format(formatter));
-        pDate.setId("pdate");
-        pLabel.setFor(pDate);
-        var gLabel = new Label("Kategorie");
-        var genre = new Paragraph(audio.getCategory().getName());
-        genre.setId("genre");
-        gLabel.setFor(genre);
+            left.add(pLabel, pDate);
+        }
+        if (audio.getCategory() != null) {
+            var gLabel = new Label("Kategorie");
+            var genre = new Paragraph(audio.getCategory().getName());
+            genre.setId("genre");
+            gLabel.setFor(genre);
+            left.add(gLabel, genre);
+        }
         var aud = new AudioPlayer();
         aud.setSource("/files/" + audio.getAudio().getName());
-        var left = new VerticalLayout(head, pLabel, pDate, gLabel, genre, aud);
+        left.add(aud);
 
         var delBtn = new Button("Löschen", l -> {
             store.unsetContent(audio.getAudio());
