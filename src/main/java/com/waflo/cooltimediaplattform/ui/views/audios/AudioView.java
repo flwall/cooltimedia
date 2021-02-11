@@ -13,16 +13,18 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
-import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
-import com.waflo.cooltimediaplattform.backend.service.FileService;
+import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.AudioPlayer;
 import org.springframework.security.access.annotation.Secured;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Route(value = "audio", layout = MainLayout.class)
@@ -31,14 +33,12 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
 
     private Audio audio;
     private final AudioService audioService;
-    private final FileService fileService;
-    private final FileContentStore store;
+    private final CloudinaryUploadService uploadService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public AudioView(AudioService service, FileService fileService, FileContentStore store) {
+    public AudioView(AudioService service, CloudinaryUploadService uploadService) {
         this.audioService = service;
-        this.fileService = fileService;
-        this.store = store;
+        this.uploadService = uploadService;
     }
 
     @Override
@@ -69,14 +69,16 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
             left.add(gLabel, genre);
         }
         var aud = new AudioPlayer();
-        aud.setSource("/files/" + audio.getAudio().getName());
+        aud.setSource(audio.getAudioUrl());
         left.add(aud);
 
         var delBtn = new Button("Löschen", l -> {
-            store.unsetContent(audio.getAudio());
+            try {
+                uploadService.destroy("audios/"+new ArrayList<>(audio.getOwner()).get(0).getId()+"/"+ Utils.toValidFileName(audio.getTitle()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            audioService.delete(audio);
-            fileService.delete(audio.getAudio());
 
             audio = null;
             back.click();

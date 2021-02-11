@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ public class Person extends Media {
     @PastOrPresent
     private LocalDate birthDate;
 
-    @OneToOne
-    private File image;
+    private String image_url;
 
 }

@@ -23,20 +23,21 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
-import com.waflo.cooltimediaplattform.backend.model.File;
 import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.model.User;
-import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
-import com.waflo.cooltimediaplattform.backend.service.FileService;
+import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.UserService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.data.CategoryDataProvider;
 import com.waflo.cooltimediaplattform.ui.data.PersonDataProvider;
+import org.apache.commons.io.FileUtils;
 import org.springframework.security.access.annotation.Secured;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.io.IOException;
 
 @Route(value = "account", layout = MainLayout.class)
 @Secured("ROLE_USER")
@@ -44,24 +45,21 @@ import java.time.LocalDate;
 public class AccountView extends VerticalLayout {
 
     private final User user;
-    private final FileService fileService;
-    private final FileContentStore store;
     private final UserService userService;
     private final PersonDataProvider personDataProvider;
     private final CategoryDataProvider categoryDataProvider;
 
     private final Notification notification = new Notification("Benutzername erfolgreich geändert", 3000);
+    private final CloudinaryUploadService uploadService;
 
-
-    public AccountView(UserSession userSession, FileService fileService, FileContentStore store, UserService userService, PersonDataProvider personDataProvider, CategoryDataProvider categoryDataProvider) {
+    public AccountView(UserSession userSession, UserService userService, PersonDataProvider personDataProvider, CategoryDataProvider categoryDataProvider, CloudinaryUploadService uploadService) {
         this.user = userSession.getUser();
-        this.fileService = fileService;
 
 
-        this.store = store;
         this.userService = userService;
         this.personDataProvider = personDataProvider;
         this.categoryDataProvider = categoryDataProvider;
+        this.uploadService = uploadService;
 
         initMenuBar();
         initAccount(null);
@@ -84,13 +82,13 @@ public class AccountView extends VerticalLayout {
         crud.addSaveListener(e -> personDataProvider.persist(e.getItem()));
         crud.addDeleteListener(e -> personDataProvider.delete(e.getItem()));
 
-        crud.getGrid().removeColumnByKey("image");
+        crud.getGrid().removeColumnByKey("image_url");
 
         crud.getGrid().addComponentColumn(person -> {
-            var img = person.getImage();
+            var img = person.getImage_url();
             if (img == null) return new Div();
 
-            var comp = new Image("/files/" + img.getName(), "Pic");
+            var comp = new Image(img, "Pic");
             comp.setWidth("48px");
             comp.setHeight("48px");
             return comp;
@@ -130,23 +128,17 @@ public class AccountView extends VerticalLayout {
         if (binder.getBean() == null)
             binder.setBean(new Person());
         pic.addSucceededListener(l -> {
-            var f = new File();
-            f.setCreated(LocalDate.now());
-            f.setName(l.getFileName());
-            f.setMimeType(l.getMIMEType());
-            File toRemove = null;
-            if (binder.getBean().getImage() != null) {
-                toRemove = binder.getBean().getImage();
-            }
-            store.setContent(f, rec.getInputStream());
-            fileService.save(f);
-            binder.getBean().setImage(f);
+            var f = new File(rec.getFileName());
+            var bean = binder.getBean();
 
-            if (toRemove != null) {
-                fileService.delete(toRemove);
-                store.unsetContent(toRemove);
-
+            try {
+                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            bean.setImage_url(rec.getFileName());
+            binder.writeBeanAsDraft(bean);
         });
 
 
@@ -229,8 +221,8 @@ public class AccountView extends VerticalLayout {
         var username = new TextField("Benutzername", user.getUsername(), "Benutzername");
         contentDiv.add(username);
         final Image img;
-        if (user.getProfile_pic() != null) {
-            img = new Image("/files/" + user.getProfile_pic().getName(), "Profilbild");
+        if (user.getProfile_pic_url() != null) {
+            img = new Image(user.getProfile_pic_url(), "Profilbild");
 
         } else
             img = new Image();
@@ -242,27 +234,14 @@ public class AccountView extends VerticalLayout {
         var profilePic = new Upload(rec);
         profilePic.setAcceptedFileTypes("image/*");
         profilePic.addSucceededListener(l -> {
-            var f = new File();
-            f.setMimeType(l.getMIMEType());
-            f.setCreated(LocalDate.now());
-            f.setName(l.getFileName());
-
-            File picToUnset = null;
-            if (user.getProfile_pic() != null) {
-                picToUnset = user.getProfile_pic();
+            try {
+                user.setProfile_pic_url(uploadService.uploadStream(rec.getInputStream(), "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername())));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            store.setContent(f, rec.getInputStream());
-            user.setProfile_pic(f);
-            fileService.save(f);
-            userService.save(user);
+            img.setSrc(user.getProfile_pic_url());
 
 
-            img.setSrc("/files/" + user.getProfile_pic().getName());
-
-            if (picToUnset != null) {
-                store.unsetContent(picToUnset);
-                fileService.delete(picToUnset);
-            }
         });
 
         Button saveBtn = new Button("Speichern");

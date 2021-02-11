@@ -12,22 +12,20 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Category;
-import com.waflo.cooltimediaplattform.backend.model.File;
 import com.waflo.cooltimediaplattform.backend.model.Person;
-import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
-import com.waflo.cooltimediaplattform.backend.service.AudioService;
-import com.waflo.cooltimediaplattform.backend.service.CategoryService;
-import com.waflo.cooltimediaplattform.backend.service.FileService;
-import com.waflo.cooltimediaplattform.backend.service.PersonService;
+import com.waflo.cooltimediaplattform.backend.service.*;
 import com.waflo.cooltimediaplattform.ui.component.AbstractForm;
 import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
 import com.waflo.cooltimediaplattform.ui.events.ValidationFailedEvent;
+import org.apache.commons.io.FileUtils;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.io.IOException;
 
 @SpringComponent
 @UIScope
@@ -43,11 +41,12 @@ public class AudioForm extends AbstractForm<Audio> {
     ComboBox<Category> category = new ComboBox<>("Kategorie");
     private final AudioService audioService;
     private final UserSession userSession;
+private final CloudinaryUploadService uploadService;
 
-
-    public AudioForm(PersonService personService, CategoryService categoryService, FileContentStore store, FileService fileService, AudioService audioService, UserSession userSession) {
+    public AudioForm(PersonService personService, CategoryService categoryService, AudioService audioService, UserSession userSession, CloudinaryUploadService uploadService) {
         this.audioService = audioService;
         this.userSession = userSession;
+        this.uploadService = uploadService;
         addClassName("audio-form");
 
         binder = new BeanValidationBinder<>(Audio.class);
@@ -64,14 +63,13 @@ public class AudioForm extends AbstractForm<Audio> {
 
         audio.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var f = new File();
-            f.setCreated(LocalDate.now());
-            f.setName(rec.getFileName());       //evt. movie title?
-            f.setMimeType(rec.getFileData().getMimeType());
-
-            store.setContent(f, rec.getInputStream());
-            fileService.save(f);
-            entity.setAudio(f);
+            var f = new File("tmp/"+rec.getFileName());
+            try {
+                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            entity.setAudioUrl(rec.getFileName());
         });
 
 
@@ -91,10 +89,18 @@ public class AudioForm extends AbstractForm<Audio> {
         try {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
+            if(entity.getAudioUrl()!=null){
+                var f=new File(entity.getAudioUrl());
+                entity.setAudioUrl(uploadService.uploadStream(FileUtils.openInputStream(f), "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
+                FileUtils.deleteQuietly(f);
+            }
+
             audioService.save(entity);
             fireEvent(new SaveEvent(this, false));
         } catch (ValidationException e) {
             fireEvent(new ValidationFailedEvent(this));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

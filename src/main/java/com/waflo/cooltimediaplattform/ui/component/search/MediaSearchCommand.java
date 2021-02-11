@@ -41,7 +41,6 @@ public class MediaSearchCommand implements ISearchCommand<Media> {
     public Optional<String> getResultURI(Media result) {
         if(result instanceof Audio)return Optional.of("audio/"+result.getId());
         if(result instanceof Document)return Optional.of("document/"+result.getId());
-        if(result instanceof Series)return Optional.of("serie/"+result.getId());
         if(result instanceof Movie)return Optional.of("movie/"+result.getId());
 
         return Optional.empty();

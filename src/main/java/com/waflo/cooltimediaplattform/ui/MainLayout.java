@@ -8,7 +8,6 @@ import com.waflo.cooltimediaplattform.ui.home.HomeView;
 import com.waflo.cooltimediaplattform.ui.views.audios.AudiosView;
 import com.waflo.cooltimediaplattform.ui.views.documents.DocumentsView;
 import com.waflo.cooltimediaplattform.ui.views.movies.MoviesView;
-import com.waflo.cooltimediaplattform.ui.views.series.SeriesView;
 
 public class MainLayout extends HeaderLayout {
 
@@ -24,7 +23,6 @@ public class MainLayout extends HeaderLayout {
         addToDrawer(new VerticalLayout(
                 listLink,
                 new RouterLink("Filme", MoviesView.class),
-                new RouterLink("Serien", SeriesView.class),
                 new RouterLink("Audios", AudiosView.class),
                 new RouterLink("Dokumente", DocumentsView.class)
         ));

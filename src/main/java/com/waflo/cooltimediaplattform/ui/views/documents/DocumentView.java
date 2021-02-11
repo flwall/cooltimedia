@@ -13,15 +13,18 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Document;
-import com.waflo.cooltimediaplattform.backend.repository.FileContentStore;
+import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
-import com.waflo.cooltimediaplattform.backend.service.FileService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import org.hibernate.mapping.Array;
 import org.springframework.security.access.annotation.Secured;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 @Route(value = "document", layout = MainLayout.class)
 @Secured("ROLE_USER")
@@ -29,14 +32,12 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
 
     private Document doc;
     private final DocumentService documentService;
-    private final FileService fileService;
-    private final FileContentStore contentStore;
+    private final CloudinaryUploadService uploadService;
 
-    public DocumentView(DocumentService documentService, FileService fileService, FileContentStore contentStore) {
+    public DocumentView(DocumentService documentService, CloudinaryUploadService uploadService) {
 
         this.documentService = documentService;
-        this.fileService = fileService;
-        this.contentStore = contentStore;
+        this.uploadService = uploadService;
     }
 
 
@@ -75,10 +76,12 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         var h = new H2("Kommentare");
 
         var delBtn = new Button("Löschen", l -> {
+            try {
+                uploadService.destroy("documents/" + new ArrayList<>(doc.getOwner()).get(0).getId() + "/" + Utils.toValidFileName(doc.getTitle()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            contentStore.unsetContent(doc.getDocument());
-            documentService.delete(doc);
-            fileService.delete(doc.getDocument());
 
             backbtn.click();
 
@@ -94,20 +97,10 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             var upl = new Upload(rec);
             upl.setAcceptedFileTypes("text/*", "application/pdf", "application/*");
             upl.addSucceededListener(l -> {
-                var f = new com.waflo.cooltimediaplattform.backend.model.File();
-                f.setMimeType(l.getMIMEType());
-                f.setCreated(LocalDate.now());
-                f.setName(l.getFileName());
-
-                var toRemove = doc.getDocument();
-                contentStore.setContent(f, rec.getInputStream());
-                fileService.save(f);
-                doc.setDocument(f);
-                documentService.save(doc);
-
-                if (toRemove != null) {
-                    contentStore.unsetContent(toRemove);
-                    fileService.delete(toRemove);
+                try {
+                    uploadService.uploadStream(rec.getInputStream(), "documents/"+new ArrayList<>(doc.getOwner()).get(0).getId()+"/"+Utils.toValidFileName(doc.getTitle()));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
             var dialog = new Dialog(upl);
@@ -116,7 +109,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             dialog.open();
         });
 
-        var download = new Anchor("/files/" + doc.getDocument().getName(), "Herunterladen");
+        var download = new Anchor(doc.getDocumentUrl(), "Herunterladen");
 
         download.getElement().setAttribute("download", true);
 

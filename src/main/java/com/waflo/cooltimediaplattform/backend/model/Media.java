@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,6 @@ public class Media {
 
     //list of use m-n
     @ManyToMany(fetch = FetchType.EAGER)
-    Set<User> owner = new HashSet<>();
+    Set<User> owner = new LinkedHashSet<>();
 
 }

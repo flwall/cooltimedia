@@ -17,8 +17,8 @@ public class Audio extends OnDemand {
     @NotEmpty
     private String title;
 
-    @OneToOne
-    private File audio;
+    @NotEmpty
+    private String audioUrl;
 
     @PastOrPresent LocalDate publishDate;
 
