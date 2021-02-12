@@ -75,7 +75,18 @@ public class AccountView extends VerticalLayout {
         Crud<Person> crud = new Crud<>(Person.class, createPersonEditor());
         crud.addSaveListener(l -> {
             l.getItem().getOwner().add(user);
-            //maybe associate image too when possible
+
+            if (l.getItem().getImage_url() != null) {
+                var f = new File(l.getItem().getImage_url());
+                try {
+                    l.getItem().setImage_url(uploadService.uploadStream(FileUtils.openInputStream(f), "images/" + user.getId() + "/" + Utils.toValidFileName(l.getItem().getName())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                FileUtils.deleteQuietly(f);
+
+            }
+
         });
 
         crud.setDataProvider(personDataProvider);
@@ -122,13 +133,14 @@ public class AccountView extends VerticalLayout {
         form.addFormItem(pic, new Label("Bild"));
 
         Binder<Person> binder = new Binder<>(Person.class);
+
         binder.bind(name, Person::getName, Person::setName);
         binder.bind(birth, Person::getBirthDate, Person::setBirthDate);
 
         if (binder.getBean() == null)
             binder.setBean(new Person());
         pic.addSucceededListener(l -> {
-            var f = new File(rec.getFileName());
+            var f = new File("tmp/" + rec.getFileName());
             var bean = binder.getBean();
 
             try {
@@ -138,7 +150,7 @@ public class AccountView extends VerticalLayout {
             }
 
             bean.setImage_url(rec.getFileName());
-            binder.writeBeanAsDraft(bean);
+            binder.setBean(bean);
         });
 
 
