@@ -9,5 +9,5 @@ FROM openjdk:15
 WORKDIR /app
 COPY --from=TEMP_BUILD_IMAGE /build/libs/cooltimedia-plattform-1.0-Beta.jar .
 RUN mv cooltimedia-plattform-1.0-Beta.jar cooltimedia.jar
-EXPOSE 8080
-CMD ["java","-jar","-Dspring.profiles.active=prod", "-Dserver.port=$PORT","cooltimedia.jar"]
+RUN echo $PORT
+CMD java -jar -Dspring.profiles.active=prod -Dserver.port=$PORT cooltimedia.jar
