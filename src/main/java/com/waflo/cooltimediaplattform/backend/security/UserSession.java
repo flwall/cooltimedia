@@ -2,6 +2,7 @@ package com.waflo.cooltimediaplattform.backend.security;
 
 import com.waflo.cooltimediaplattform.backend.model.User;
 import com.waflo.cooltimediaplattform.backend.service.UserService;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.io.Serializable;
+import java.util.stream.Collectors;
 
 @Component
 @SessionScope
@@ -17,6 +19,7 @@ public class UserSession implements Serializable {
 
 
     private final UserService userService;
+    private final Logger logger=LoggerFactory.getLogger(getClass().getName());
 
     public UserSession(UserService userService) {
         this.userService = userService;
@@ -32,6 +35,9 @@ public class UserSession implements Serializable {
         var u = userService.findByOauthId(principal.getName());
         if (u.isPresent()) return u.get();
 
+        logger.error(principal.getAttributes().keySet().stream()
+                .map(key -> key + "=" + principal.getAttributes().get(key))
+                .collect(Collectors.joining(", ", "{", "}")));
 
         var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
         return userService.save(newUser);
