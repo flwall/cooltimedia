@@ -1,12 +1,9 @@
 FROM adoptopenjdk/openjdk15 AS TEMP_BUILD_IMAGE
 WORKDIR /
 RUN apt-get update&& apt-get install nodejs npm -y
-COPY build.gradle settings.gradle gradlew /
-COPY gradle /gradle
-RUN chmod +x ./gradlew
 COPY . .
-RUN ./gradlew build -Dprofile=prod "-Dvaadin.productionMode=true"
-RUN ls -la /build/libs
+RUN chmod +x gradlew&& gradlew build -Dprofile=prod "-Dvaadin.productionMode=true"
+
 
 FROM openjdk:15
 WORKDIR /app
