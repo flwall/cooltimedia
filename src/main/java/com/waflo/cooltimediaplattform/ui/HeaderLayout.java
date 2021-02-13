@@ -11,9 +11,11 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
 import com.waflo.cooltimediaplattform.backend.model.Media;
 import com.waflo.cooltimediaplattform.backend.security.SecurityUtils;
 import com.waflo.cooltimediaplattform.ui.component.search.MediaSearchCommand;
@@ -21,7 +23,7 @@ import com.waflo.cooltimediaplattform.ui.component.search.MediaSearchCommand;
 import java.util.stream.Collectors;
 
 @PWA(shortName = "CTM", name = "Cooltimedia")
-@Theme(Lumo.class)
+@Theme(Material.class)
 public class HeaderLayout extends AppLayout {
 
 
