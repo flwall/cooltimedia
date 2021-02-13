@@ -3,7 +3,7 @@ WORKDIR /
 RUN apt-get update&& apt-get install nodejs npm -y
 COPY build.gradle settings.gradle gradlew /
 COPY gradle /gradle
-RUN chmod +x gradlew
+RUN chmod +x ./gradlew
 COPY . .
 RUN ./gradlew build -Dprofile=prod "-Dvaadin.productionMode=true"
 RUN ls -la /build/libs
