@@ -10,4 +10,4 @@ WORKDIR /app
 COPY --from=TEMP_BUILD_IMAGE /build/libs/cooltimedia-plattform-1.0-Beta.jar .
 RUN mv cooltimedia-plattform-1.0-Beta.jar cooltimedia.jar
 RUN echo $PORT
-CMD java -jar -Dspring.profiles.active=prod -Dserver.port=$PORT cooltimedia.jar
+CMD java $JAVA_OPTS -jar -Dspring.profiles.active=prod -Dserver.port=$PORT cooltimedia.jar
