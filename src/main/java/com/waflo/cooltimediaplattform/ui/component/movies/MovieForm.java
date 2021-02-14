@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
@@ -69,7 +70,7 @@ public class MovieForm extends AbstractForm<Movie> {
         stream.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
 
-            var f = new File("tmp/"+rec.getFileName());
+            var f = new File(Constants.tmpDir+rec.getFileName());
             try {
                 FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
             } catch (IOException e) {
@@ -87,7 +88,7 @@ public class MovieForm extends AbstractForm<Movie> {
         thumbnail.setAcceptedFileTypes("image/*");
         thumbnail.addAllFinishedListener(l -> {
 
-            var f = new File("tmp/"+r.getFileName());
+            var f = new File(Constants.tmpDir+r.getFileName());
             try {
                 FileUtils.copyInputStreamToFile(r.getInputStream(), f);
             } catch (IOException e) {
@@ -121,12 +122,12 @@ public class MovieForm extends AbstractForm<Movie> {
             binder.writeBean(entity);
             if (entity.getStreamUrl() != null) {
              var f=new File(entity.getStreamUrl());
-                entity.setStreamUrl(uploadService.uploadStream(FileUtils.openInputStream(f), "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
+                entity.setStreamUrl(uploadService.uploadStream(f, "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
             FileUtils.deleteQuietly(f);
             }
             if (entity.getThumbnailUrl() != null) {
                 var f=new File(entity.getThumbnailUrl());
-                entity.setThumbnailUrl(uploadService.uploadStream(FileUtils.openInputStream(f), "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
+                entity.setThumbnailUrl(uploadService.uploadStream(f, "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
                 FileUtils.deleteQuietly(f);
             }
 

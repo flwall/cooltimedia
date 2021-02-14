@@ -35,11 +35,8 @@ public class UserSession implements Serializable {
         var u = userService.findByOauthId(principal.getName());
         if (u.isPresent()) return u.get();
 
-        logger.error(principal.getAttributes().keySet().stream()
-                .map(key -> key + "=" + principal.getAttributes().get(key))
-                .collect(Collectors.joining(", ", "{", "}")));
-
         var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
+        newUser.setProfile_pic_url(principal.getAttribute("picture"));
         return userService.save(newUser);
     }
 

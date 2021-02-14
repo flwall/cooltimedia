@@ -13,14 +13,17 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.mapping.Array;
 import org.springframework.security.access.annotation.Secured;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -98,7 +101,11 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             upl.setAcceptedFileTypes("text/*", "application/pdf", "application/*");
             upl.addSucceededListener(l -> {
                 try {
-                    uploadService.uploadStream(rec.getInputStream(), "documents/"+new ArrayList<>(doc.getOwner()).get(0).getId()+"/"+Utils.toValidFileName(doc.getTitle()));
+
+                    var f=new File(Constants.tmpDir+doc.getId());
+                    FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+                    uploadService.uploadStream(f, "documents/"+new ArrayList<>(doc.getOwner()).get(0).getId()+"/"+Utils.toValidFileName(doc.getTitle()));
+                    FileUtils.deleteQuietly(f);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

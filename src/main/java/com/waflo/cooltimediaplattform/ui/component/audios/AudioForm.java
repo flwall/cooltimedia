@@ -12,6 +12,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Category;
@@ -63,7 +64,7 @@ private final CloudinaryUploadService uploadService;
 
         audio.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var f = new File("tmp/"+rec.getFileName());
+            var f = new File(Constants.tmpDir +rec.getFileName());
             try {
                 FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
             } catch (IOException e) {
@@ -91,7 +92,7 @@ private final CloudinaryUploadService uploadService;
             binder.writeBean(entity);
             if(entity.getAudioUrl()!=null){
                 var f=new File(entity.getAudioUrl());
-                entity.setAudioUrl(uploadService.uploadStream(FileUtils.openInputStream(f), "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
+                entity.setAudioUrl(uploadService.uploadStream(f, "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
                 FileUtils.deleteQuietly(f);
             }
 

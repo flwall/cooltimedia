@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Document;
@@ -68,7 +69,7 @@ public class DocumentForm extends AbstractForm<Document> {
 
         document.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var f = new File("tmp/"+rec.getFileName());
+            var f = new File(Constants.tmpDir+rec.getFileName());
 
             try {
                 FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
@@ -96,8 +97,8 @@ public class DocumentForm extends AbstractForm<Document> {
             binder.writeBean(entity);
             if (entity.getDocumentUrl() != null) {
                 var f=new File(entity.getDocumentUrl());
-                entity.setDocumentUrl(uploadService.uploadStream(FileUtils.openInputStream(f), "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
-FileUtils.deleteQuietly(f);
+                entity.setDocumentUrl(uploadService.uploadStream(f, "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
+                FileUtils.deleteQuietly(f);
 
             }
 

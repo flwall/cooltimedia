@@ -2,8 +2,8 @@ package com.waflo.cooltimediaplattform.backend.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.waflo.cooltimediaplattform.Constants;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,15 +19,14 @@ public class CloudinaryUploadService {
         this.cloudinaryConfig = cloudinaryConfig;
     }
 
-    public String uploadStream(InputStream stream, String publicID) throws IOException {
-        var f=new File("./tmp/temp");
-        FileUtils.copyInputStreamToFile(stream, f);
-        final Map upload = cloudinaryConfig.uploader().upload("./temp", ObjectUtils.asMap("public_id", publicID, "resource_type", "auto", "overwrite", true));
+    public String uploadStream(File f, String publicID) throws IOException {
+        final Map upload = cloudinaryConfig.uploader().upload(f, ObjectUtils.asMap("public_id", publicID, "resource_type", "auto", "overwrite", true));
         FileUtils.deleteQuietly(f);
         return upload.get("url").toString();
     }
+
     public boolean destroy(String publicID) throws IOException {
-       var res= cloudinaryConfig.uploader().destroy(publicID, ObjectUtils.emptyMap());
-       return res.get("result").equals("ok");
+        var res = cloudinaryConfig.uploader().destroy(publicID, ObjectUtils.emptyMap());
+        return res.get("result").equals("ok");
     }
 }

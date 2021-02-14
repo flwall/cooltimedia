@@ -23,6 +23,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Person;
@@ -79,7 +80,7 @@ public class AccountView extends VerticalLayout {
             if (l.getItem().getImage_url() != null) {
                 var f = new File(l.getItem().getImage_url());
                 try {
-                    l.getItem().setImage_url(uploadService.uploadStream(FileUtils.openInputStream(f), "images/" + user.getId() + "/" + Utils.toValidFileName(l.getItem().getName())));
+                    l.getItem().setImage_url(uploadService.uploadStream(f, "images/" + user.getId() + "/" + Utils.toValidFileName(l.getItem().getName())));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -140,7 +141,7 @@ public class AccountView extends VerticalLayout {
         if (binder.getBean() == null)
             binder.setBean(new Person());
         pic.addSucceededListener(l -> {
-            var f = new File("tmp/" + rec.getFileName());
+            var f = new File(Constants.tmpDir + rec.getFileName());
             var bean = binder.getBean();
 
             try {
@@ -247,7 +248,10 @@ public class AccountView extends VerticalLayout {
         profilePic.setAcceptedFileTypes("image/*");
         profilePic.addSucceededListener(l -> {
             try {
-                user.setProfile_pic_url(uploadService.uploadStream(rec.getInputStream(), "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername())));
+                var f=new File(Constants.tmpDir+user.getId());
+                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+                user.setProfile_pic_url(uploadService.uploadStream(f, "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername())));
+                FileUtils.deleteQuietly(f);
             } catch (IOException e) {
                 e.printStackTrace();
             }
