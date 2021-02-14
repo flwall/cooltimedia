@@ -1,6 +1,7 @@
 package com.waflo.cooltimediaplattform.ui.views;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -20,10 +21,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ReadOnlyHasValue;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.waflo.cooltimediaplattform.Constants;
+import com.vaadin.flow.shared.Registration;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Person;
@@ -77,17 +79,6 @@ public class AccountView extends VerticalLayout {
         crud.addSaveListener(l -> {
             l.getItem().getOwner().add(user);
 
-            if (l.getItem().getImage_url() != null) {
-                var f = new File(l.getItem().getImage_url());
-                try {
-                    l.getItem().setImage_url(uploadService.uploadStream(f, "images/" + user.getId() + "/" + Utils.toValidFileName(l.getItem().getName())));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                FileUtils.deleteQuietly(f);
-
-            }
-
         });
 
         crud.setDataProvider(personDataProvider);
@@ -138,20 +129,21 @@ public class AccountView extends VerticalLayout {
         binder.bind(name, Person::getName, Person::setName);
         binder.bind(birth, Person::getBirthDate, Person::setBirthDate);
 
+
+        var inv=new TextField();
+        inv.setVisible(false);
+        binder.bind(inv, Person::getImage_url, Person::setImage_url);
+        form.add(inv);
         if (binder.getBean() == null)
             binder.setBean(new Person());
         pic.addSucceededListener(l -> {
-            var f = new File(Constants.tmpDir + rec.getFileName());
-            var bean = binder.getBean();
-
+            String url= null;
             try {
-                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+                url = uploadService.uploadStream(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            bean.setImage_url(rec.getFileName());
-            binder.setBean(bean);
+            inv.setValue(url);
         });
 
 
@@ -248,10 +240,8 @@ public class AccountView extends VerticalLayout {
         profilePic.setAcceptedFileTypes("image/*");
         profilePic.addSucceededListener(l -> {
             try {
-                var f=new File(Constants.tmpDir+user.getId());
-                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
-                user.setProfile_pic_url(uploadService.uploadStream(f, "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername())));
-                FileUtils.deleteQuietly(f);
+                user.setProfile_pic_url(uploadService.uploadStream(rec.getInputStream(), "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername())));
+                img.setSrc(user.getProfile_pic_url());
             } catch (IOException e) {
                 e.printStackTrace();
             }

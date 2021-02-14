@@ -12,20 +12,20 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
-import com.waflo.cooltimediaplattform.backend.service.*;
+import com.waflo.cooltimediaplattform.backend.service.AudioService;
+import com.waflo.cooltimediaplattform.backend.service.CategoryService;
+import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
+import com.waflo.cooltimediaplattform.backend.service.PersonService;
 import com.waflo.cooltimediaplattform.ui.component.AbstractForm;
 import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
 import com.waflo.cooltimediaplattform.ui.events.ValidationFailedEvent;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 @SpringComponent
@@ -42,7 +42,7 @@ public class AudioForm extends AbstractForm<Audio> {
     ComboBox<Category> category = new ComboBox<>("Kategorie");
     private final AudioService audioService;
     private final UserSession userSession;
-private final CloudinaryUploadService uploadService;
+    private final CloudinaryUploadService uploadService;
 
     public AudioForm(PersonService personService, CategoryService categoryService, AudioService audioService, UserSession userSession, CloudinaryUploadService uploadService) {
         this.audioService = audioService;
@@ -64,13 +64,13 @@ private final CloudinaryUploadService uploadService;
 
         audio.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var f = new File(Constants.tmpDir +rec.getFileName());
+            var id = Utils.generateTempPublicId(rec.getFileName());
             try {
-                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+                uploadService.uploadStream(rec.getInputStream(), id);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            entity.setAudioUrl(rec.getFileName());
+            entity.setAudioUrl(id);
         });
 
 
@@ -90,10 +90,9 @@ private final CloudinaryUploadService uploadService;
         try {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
-            if(entity.getAudioUrl()!=null){
-                var f=new File(entity.getAudioUrl());
-                entity.setAudioUrl(uploadService.uploadStream(f, "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
-                FileUtils.deleteQuietly(f);
+            if (entity.getAudioUrl() != null) {
+                var url = uploadService.rename(entity.getAudioUrl(), "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                entity.setAudioUrl(url);
             }
 
             audioService.save(entity);

@@ -6,4 +6,8 @@ public class Utils {
         return title.replaceAll("\\W+", "-");
 
     }
+    public static String generateTempPublicId(String fn){
+        int rand=(int)(Math.random()*100);
+        return "tmp/"+rand+"-"+fn;
+    }
 }

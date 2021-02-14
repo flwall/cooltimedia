@@ -13,7 +13,6 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
@@ -27,9 +26,7 @@ import com.waflo.cooltimediaplattform.ui.component.AbstractForm;
 import com.waflo.cooltimediaplattform.ui.events.CancelEvent;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
 import com.waflo.cooltimediaplattform.ui.events.ValidationFailedEvent;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 @SpringComponent
@@ -70,15 +67,14 @@ public class MovieForm extends AbstractForm<Movie> {
         stream.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
 
-            var f = new File(Constants.tmpDir+rec.getFileName());
+            var id = Utils.generateTempPublicId(rec.getFileName());
             try {
-                FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
+                uploadService.uploadStream(rec.getInputStream(), id);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
-            entity.setStreamUrl(rec.getFileName());
+            entity.setStreamUrl(id);
         });
         //add listener
         var r = new FileBuffer();
@@ -88,13 +84,13 @@ public class MovieForm extends AbstractForm<Movie> {
         thumbnail.setAcceptedFileTypes("image/*");
         thumbnail.addAllFinishedListener(l -> {
 
-            var f = new File(Constants.tmpDir+r.getFileName());
+            var id = Utils.generateTempPublicId(r.getFileName());
             try {
-                FileUtils.copyInputStreamToFile(r.getInputStream(), f);
+                uploadService.uploadStream(r.getInputStream(), id);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            entity.setThumbnailUrl(r.getFileName());
+            entity.setThumbnailUrl(id);
 
         });
         thumbnailLabel.setFor(thumbnail);
@@ -121,16 +117,13 @@ public class MovieForm extends AbstractForm<Movie> {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
             if (entity.getStreamUrl() != null) {
-             var f=new File(entity.getStreamUrl());
-                entity.setStreamUrl(uploadService.uploadStream(f, "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
-            FileUtils.deleteQuietly(f);
+                var url = uploadService.rename(entity.getStreamUrl(), "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                entity.setStreamUrl(url);
             }
             if (entity.getThumbnailUrl() != null) {
-                var f=new File(entity.getThumbnailUrl());
-                entity.setThumbnailUrl(uploadService.uploadStream(f, "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle())));
-                FileUtils.deleteQuietly(f);
+                var url = uploadService.rename(entity.getThumbnailUrl(), "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                entity.setThumbnailUrl(url);
             }
-
 
 
             movieService.save(entity);

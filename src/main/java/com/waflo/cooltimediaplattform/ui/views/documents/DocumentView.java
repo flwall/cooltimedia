@@ -13,19 +13,15 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
-import com.waflo.cooltimediaplattform.Constants;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Document;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
-import org.apache.commons.io.FileUtils;
-import org.hibernate.mapping.Array;
 import org.springframework.security.access.annotation.Secured;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -36,11 +32,13 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
     private Document doc;
     private final DocumentService documentService;
     private final CloudinaryUploadService uploadService;
+    private final UserSession userSession;
 
-    public DocumentView(DocumentService documentService, CloudinaryUploadService uploadService) {
+    public DocumentView(DocumentService documentService, CloudinaryUploadService uploadService, UserSession userSession) {
 
         this.documentService = documentService;
         this.uploadService = uploadService;
+        this.userSession = userSession;
     }
 
 
@@ -92,20 +90,20 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         var right = new VerticalLayout(h, delBtn);
 
         var content = new HorizontalLayout(left, right);
-
+        var download = new Anchor(doc.getDocumentUrl(), "Herunterladen");
         var upload = new Button("Neue Version hochladen", u -> {
 
             var rec = new FileBuffer();
 
             var upl = new Upload(rec);
             upl.setAcceptedFileTypes("text/*", "application/pdf", "application/*");
+
             upl.addSucceededListener(l -> {
                 try {
 
-                    var f=new File(Constants.tmpDir+doc.getId());
-                    FileUtils.copyInputStreamToFile(rec.getInputStream(), f);
-                    uploadService.uploadStream(f, "documents/"+new ArrayList<>(doc.getOwner()).get(0).getId()+"/"+Utils.toValidFileName(doc.getTitle()));
-                    FileUtils.deleteQuietly(f);
+                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(doc.getTitle()));
+                    doc.setDocumentUrl(url);
+                    download.setHref(doc.getDocumentUrl());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -116,7 +114,6 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             dialog.open();
         });
 
-        var download = new Anchor(doc.getDocumentUrl(), "Herunterladen");
 
         download.getElement().setAttribute("download", true);
 
