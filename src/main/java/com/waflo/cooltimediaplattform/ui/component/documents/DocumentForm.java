@@ -66,7 +66,7 @@ public class DocumentForm extends AbstractForm<Document> {
 
         document.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var id = Utils.generateTempPublicId(rec.getFileName());
+            var id = Utils.generateTempPublicId(rec.getFileName(), true);
             try {
                 uploadService.uploadStream(rec.getInputStream(), id);
             } catch (IOException e) {

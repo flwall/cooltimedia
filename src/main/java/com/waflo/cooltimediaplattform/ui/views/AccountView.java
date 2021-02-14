@@ -139,7 +139,7 @@ public class AccountView extends VerticalLayout {
         pic.addSucceededListener(l -> {
             String url= null;
             try {
-                url = uploadService.uploadStream(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName()));
+                url = uploadService.uploadStream(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName(), false));
             } catch (IOException e) {
                 e.printStackTrace();
             }

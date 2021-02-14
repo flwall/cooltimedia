@@ -64,7 +64,7 @@ public class AudioForm extends AbstractForm<Audio> {
 
         audio.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var id = Utils.generateTempPublicId(rec.getFileName());
+            var id = Utils.generateTempPublicId(rec.getFileName(), true);
             try {
                 uploadService.uploadStream(rec.getInputStream(), id);
             } catch (IOException e) {

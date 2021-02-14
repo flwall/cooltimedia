@@ -67,7 +67,7 @@ public class MovieForm extends AbstractForm<Movie> {
         stream.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
 
-            var id = Utils.generateTempPublicId(rec.getFileName());
+            var id = Utils.generateTempPublicId(rec.getFileName(), false);
             try {
                 uploadService.uploadStream(rec.getInputStream(), id);
             } catch (IOException e) {
@@ -84,7 +84,7 @@ public class MovieForm extends AbstractForm<Movie> {
         thumbnail.setAcceptedFileTypes("image/*");
         thumbnail.addAllFinishedListener(l -> {
 
-            var id = Utils.generateTempPublicId(r.getFileName());
+            var id = Utils.generateTempPublicId(r.getFileName(), false);
             try {
                 uploadService.uploadStream(r.getInputStream(), id);
             } catch (IOException e) {
