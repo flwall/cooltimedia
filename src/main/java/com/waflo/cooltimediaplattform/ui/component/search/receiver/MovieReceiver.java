@@ -23,7 +23,7 @@ public class MovieReceiver implements IReceiver<Movie> {
 
     @Override
     public List<Movie> search(String value) {
-        String lower=value.toLowerCase(Locale.ROOT);
+        String lower=value.toLowerCase();
         return movieService.findAllByUser(session.getUser().getId()).stream().filter(m->m.getTitle().toLowerCase(Locale.ROOT)
                 .contains(lower)).collect(Collectors.toList());
     }

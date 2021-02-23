@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.backend.ResourceType;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
@@ -69,7 +70,7 @@ public class MovieForm extends AbstractForm<Movie> {
 
             var id = Utils.generateTempPublicId(rec.getFileName(), false);
             try {
-                uploadService.uploadStream(rec.getInputStream(), id);
+                uploadService.uploadStream(rec.getInputStream(), id, ResourceType.VIDEO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -86,7 +87,7 @@ public class MovieForm extends AbstractForm<Movie> {
 
             var id = Utils.generateTempPublicId(r.getFileName(), false);
             try {
-                uploadService.uploadStream(r.getInputStream(), id);
+                uploadService.uploadStream(r.getInputStream(), id, ResourceType.IMAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -117,11 +118,11 @@ public class MovieForm extends AbstractForm<Movie> {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
             if (entity.getStreamUrl() != null) {
-                var url = uploadService.rename(entity.getStreamUrl(), "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                var url = uploadService.rename(entity.getStreamUrl(), "movies/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()), ResourceType.VIDEO);
                 entity.setStreamUrl(url);
             }
             if (entity.getThumbnailUrl() != null) {
-                var url = uploadService.rename(entity.getThumbnailUrl(), "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                var url = uploadService.rename(entity.getThumbnailUrl(), "thumbnails/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()), ResourceType.IMAGE);
                 entity.setThumbnailUrl(url);
             }
 

@@ -12,6 +12,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.waflo.cooltimediaplattform.backend.ResourceType;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Category;
@@ -64,9 +65,9 @@ public class AudioForm extends AbstractForm<Audio> {
 
         audio.addAllFinishedListener(l -> {
             if (rec.getFileData() == null) return;
-            var id = Utils.generateTempPublicId(rec.getFileName(), true);
+            var id = Utils.generateTempPublicId(rec.getFileName(), false);
             try {
-                uploadService.uploadStream(rec.getInputStream(), id);
+                uploadService.uploadStream(rec.getInputStream(), id, ResourceType.VIDEO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,7 +92,7 @@ public class AudioForm extends AbstractForm<Audio> {
             entity.getOwner().add(userSession.getUser());
             binder.writeBean(entity);
             if (entity.getAudioUrl() != null) {
-                var url = uploadService.rename(entity.getAudioUrl(), "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()));
+                var url = uploadService.rename(entity.getAudioUrl(), "audios/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(entity.getTitle()), ResourceType.VIDEO);
                 entity.setAudioUrl(url);
             }
 

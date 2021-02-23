@@ -13,6 +13,7 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
+import com.waflo.cooltimediaplattform.backend.ResourceType;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
@@ -101,7 +102,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             upl.addSucceededListener(l -> {
                 try {
 
-                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(doc.getTitle()));
+                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(doc.getTitle()), ResourceType.RAW);
                     doc.setDocumentUrl(url);
                     download.setHref(doc.getDocumentUrl());
                 } catch (IOException e) {
