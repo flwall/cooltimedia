@@ -9,10 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.waflo.cooltimediaplattform.backend.ResourceType;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Document;
@@ -28,12 +25,13 @@ import java.util.ArrayList;
 
 @Route(value = "document", layout = MainLayout.class)
 @Secured("ROLE_USER")
-public class DocumentView extends VerticalLayout implements HasUrlParameter<Long> {
+public class DocumentView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private Document doc;
     private final DocumentService documentService;
     private final CloudinaryUploadService uploadService;
     private final UserSession userSession;
+    private String title;
 
     public DocumentView(DocumentService documentService, CloudinaryUploadService uploadService, UserSession userSession) {
 
@@ -48,6 +46,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         doc = documentService.findById(parameter).orElseThrow(NotFoundException::new);
 
         initView();
+        this.title=doc.getTitle();
     }
 
     private void initView() {
@@ -127,4 +126,8 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
 
+    @Override
+    public String getPageTitle() {
+        return title;
+    }
 }

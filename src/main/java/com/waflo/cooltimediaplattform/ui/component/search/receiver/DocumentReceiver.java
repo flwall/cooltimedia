@@ -1,5 +1,6 @@
 package com.waflo.cooltimediaplattform.ui.component.search.receiver;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@SpringComponent
 public class DocumentReceiver implements IReceiver<Document> {
     private final DocumentService documentService;
     private final UserSession session;

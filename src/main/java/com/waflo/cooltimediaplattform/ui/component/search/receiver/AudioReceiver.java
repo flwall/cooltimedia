@@ -1,5 +1,6 @@
 package com.waflo.cooltimediaplattform.ui.component.search.receiver;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@SpringComponent
 public class AudioReceiver implements IReceiver<Audio> {
 
     private final AudioService audioService;

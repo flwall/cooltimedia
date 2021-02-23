@@ -9,10 +9,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
@@ -29,12 +26,13 @@ import java.util.Set;
 
 @Route(value = "audio", layout = MainLayout.class)
 @Secured("ROLE_USER")
-public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
+public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private Audio audio;
     private final AudioService audioService;
     private final CloudinaryUploadService uploadService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private String title="Audio";
 
     public AudioView(AudioService service, CloudinaryUploadService uploadService) {
         this.audioService = service;
@@ -88,9 +86,16 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long> {
         var content = new HorizontalLayout(left, right);
 
         add(content);
+        this.title=audio.getTitle();
+
     }
 
     private Component renderRatings(Set<Rating> ratings) {
         return new H1("todo");
+    }
+
+    @Override
+    public String getPageTitle() {
+        return title;
     }
 }

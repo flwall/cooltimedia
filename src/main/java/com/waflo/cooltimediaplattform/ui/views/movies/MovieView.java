@@ -9,10 +9,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
 import com.waflo.cooltimediaplattform.backend.service.MovieService;
@@ -25,10 +22,11 @@ import java.util.Set;
 
 @Route(value = "movie", layout = MainLayout.class)
 @Secured("ROLE_USER")
-public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
+public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private final MovieService movieService;
     private Movie movie;
+    private String title;
 
     public MovieView(MovieService service) {
         this.movieService = service;
@@ -39,6 +37,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long> {
         movie = movieService.findById(parameter).orElseThrow(NotFoundException::new);
 
         initMovieDetail();
+        this.title=movie.getTitle();
     }
 
     private void initMovieDetail() {
@@ -131,5 +130,10 @@ layout.add(publishLabel,publishDate);
         videoContainer = new Div(head, vid);
         add(videoContainer);
 
+    }
+
+    @Override
+    public String getPageTitle() {
+        return title;
     }
 }
