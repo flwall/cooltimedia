@@ -30,7 +30,7 @@ public class CooltimediaPlattformApplication {
         SpringApplication.run(CooltimediaPlattformApplication.class, args);
     }
     @Bean
-    ServletRegistrationBean<FacesServlet> jsfServletRegistration (ServletContext servletContext) {
+    ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
         ServletRegistrationBean<FacesServlet> servletRegistrationBean = new ServletRegistrationBean<>(
                 new FacesServlet(), "*.xhtml");

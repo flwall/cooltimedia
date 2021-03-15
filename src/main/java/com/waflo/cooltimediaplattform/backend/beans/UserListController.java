@@ -1,22 +1,37 @@
 package com.waflo.cooltimediaplattform.backend.beans;
 
+import com.waflo.cooltimediaplattform.backend.jparepository.IRepository;
+import com.waflo.cooltimediaplattform.backend.jparepository.JpaRepository;
+import com.waflo.cooltimediaplattform.backend.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
+import java.util.List;
 
-@ManagedBean(name = "userController")
 @ViewScoped
+@ManagedBean(name = "userController")
 public class UserListController {
+    private final IRepository<User, Long> repo=new JpaRepository<>();
 
-    private String msg="hello there";
+    private List<User> users;
 
-    public String getMsg() {
-        return msg;
+    public UserListController(){
+        users=repo.findAll();
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void delete(User u){
+        repo.delete(u);
     }
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
 }
