@@ -4,9 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
-
+<ui:composition template="./layout.xhtml">
+<ui:param name="title" value="Admin - Benutzer"/>
+<ui:define name="content">
 <h:form id="form">
-    <p:panel header="Users Liste">
+    <p:panel header="Benutzer - Liste">
         <p:dataTable id="table" var="user" value="#{userController.users}">
             <p:column>
                 <f:facet name="header"># Id</f:facet>
@@ -17,9 +19,13 @@
                 <f:facet name="header">Name</f:facet>
                 <h:outputText value="#{user.username}" />
             </p:column>
-
-
+            <p:column>
+               <f:facet name="header">Aktionen</f:facet>
+                <p:commandButton action="#{userController.delete(user)}" value="Entfernen"/>
+            </p:column>
         </p:dataTable>
     </p:panel>
 </h:form>
+</ui:define>
+</ui:composition>
 </html>

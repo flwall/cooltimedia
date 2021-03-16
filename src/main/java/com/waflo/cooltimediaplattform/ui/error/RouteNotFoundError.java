@@ -9,7 +9,6 @@ import com.waflo.cooltimediaplattform.ui.home.HomeView;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Tag(Tag.DIV)
 @Route(value = "not-found", layout = MainLayout.class)
 @PageTitle("Page not Found")
 public class RouteNotFoundError extends VerticalLayout

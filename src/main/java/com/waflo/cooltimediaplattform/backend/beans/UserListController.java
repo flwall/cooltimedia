@@ -4,29 +4,44 @@ import com.waflo.cooltimediaplattform.backend.jparepository.IRepository;
 import com.waflo.cooltimediaplattform.backend.jparepository.JpaRepository;
 import com.waflo.cooltimediaplattform.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.view.ViewScoped;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Component(value = "userController")
+@ManagedBean
 @ViewScoped
-@ManagedBean(name = "userController")
 public class UserListController {
-    private final IRepository<User, Long> repo=new JpaRepository<>();
+    @Autowired
+    EntityManager em;
+
+    private IRepository<User, Long> repo;
 
     private List<User> users;
 
-    public UserListController(){
-        users=repo.findAll();
+    public UserListController(EntityManager em) {
+        repo = new JpaRepository<>(em, User.class);
     }
 
-    public void delete(User u){
-        repo.delete(u);
+    @PostConstruct()
+    public void load() {
+        users = repo.findAll();
     }
+
+    @Transactional
+    public void delete(User u) {
+        repo.delete(u);
+        users = repo.findAll();
+    }
+
     public List<User> getUsers() {
+        users=repo.findAll();
         return users;
     }
 
