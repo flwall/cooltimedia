@@ -26,5 +26,4 @@ public class OnDemand extends Media {
     @JoinColumn(name = "fk_category")
     private Category category;
 
-
 }

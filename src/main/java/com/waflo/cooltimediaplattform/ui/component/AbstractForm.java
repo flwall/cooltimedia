@@ -5,22 +5,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
 public abstract class AbstractForm<R> extends FormLayout {
 
-    protected Button save=new Button("Speichern"), close=new Button("Abbrechen");
+    protected Button save = new Button("Speichern"), close = new Button("Abbrechen");
 
     protected Binder<R> binder;
     protected R entity;
-
-
-
-
-
-
 
     public R getEntity() {
         return entity;

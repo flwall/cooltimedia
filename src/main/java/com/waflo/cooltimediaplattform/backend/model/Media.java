@@ -3,7 +3,6 @@ package com.waflo.cooltimediaplattform.backend.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

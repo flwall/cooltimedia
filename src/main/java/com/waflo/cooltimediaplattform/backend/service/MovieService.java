@@ -1,6 +1,5 @@
 package com.waflo.cooltimediaplattform.backend.service;
 
-import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
 import com.waflo.cooltimediaplattform.backend.repository.MovieRepository;
 import org.springframework.stereotype.Service;

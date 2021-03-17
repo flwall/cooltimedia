@@ -21,13 +21,10 @@ public class Movie extends OnDemand {
     @NotEmpty
     private String streamUrl;
 
-
     @PastOrPresent
     LocalDate publishDate;
 
-
     private String thumbnailUrl;
-
 
     public String toString() {
         return title;

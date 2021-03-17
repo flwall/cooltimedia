@@ -1,20 +1,12 @@
 package com.waflo.cooltimediaplattform.ui.component;
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.polymertemplate.EventHandler;
-import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.templatemodel.TemplateModel;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,30 +17,31 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
     private int maxRating;
     private int rating;
     private boolean isReadonly;
+
     public RatingStars(int maxRating) {
         this.maxRating = maxRating;
         this.init();
     }
 
     private void init() {
-        var div=new Div();
+        var div = new Div();
         div.setClassName("container");
-        var d2=new Div();
+        var d2 = new Div();
         d2.setClassName("rating");
 
-        for(int i=maxRating;i>0;i--){
-            var inp=new Input();
+        for (int i = maxRating; i > 0; i--) {
+            var inp = new Input();
             inp.setType("radio");
-            inp.setId("rating-"+i);
-            if(i==rating)
+            inp.setId("rating-" + i);
+            if (i == rating)
                 inp.getElement().setAttribute("checked", "true");
 
-            if(this.isReadonly)
+            if (this.isReadonly)
                 inp.setEnabled(false);
 
-            final var x=i;
-            inp.addValueChangeListener((ev)->onRatingChange(x));
-            var l=new Label();
+            final var x = i;
+            inp.addValueChangeListener((ev) -> onRatingChange(x));
+            var l = new Label();
             l.setFor(inp);
 
             d2.add(inp, l);
@@ -60,12 +53,10 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
     }
 
 
-
-
     public void onRatingChange(int rat) {
         for (ValueChangeListener<? super ValueChangeEvent<Integer>> valueChangeListener : toNotify) {
-            var self=this;
-            var val= new ValueChangeEvent<Integer>() {
+            var self = this;
+            var val = new ValueChangeEvent<Integer>() {
                 @Override
                 public HasValue<?, Integer> getHasValue() {
                     return self;
@@ -88,7 +79,7 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
             };
             valueChangeListener.valueChanged(val);
         }
-        this.rating=rat;
+        this.rating = rat;
     }
 
     private final List<ValueChangeListener<? super ValueChangeEvent<Integer>>> toNotify = new LinkedList<>();
@@ -135,7 +126,7 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        this.isReadonly=readOnly;
+        this.isReadonly = readOnly;
         this.removeAll();
         this.init();
 

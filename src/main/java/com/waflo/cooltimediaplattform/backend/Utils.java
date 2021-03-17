@@ -6,11 +6,12 @@ public class Utils {
         return title.replaceAll("\\W+", "-");
 
     }
-    public static String generateTempPublicId(String fn, boolean useFileExt){
-        int rand=(int)(Math.random()*100);
-        var id= "tmp/"+rand+"-"+fn;
-        if(!useFileExt&&id.contains("."))
-            id=id.substring(0, id.lastIndexOf("."));
+
+    public static String generateTempPublicId(String fn, boolean useFileExt) {
+        int rand = (int) (Math.random() * 100);
+        var id = "tmp/" + rand + "-" + fn;
+        if (!useFileExt && id.contains("."))
+            id = id.substring(0, id.lastIndexOf("."));
         return id;
     }
 }

@@ -88,7 +88,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
 
         });
         var right = new VerticalLayout(h, userSession.getUser()==null?null:delBtn);
-        
+
         var content = new HorizontalLayout(left, right);
         var download = new Anchor(uploadService.download("documents/"+doc.getAuthor().getId()+"/"+Utils.toValidFileName(doc.getTitle()), "raw"), "Herunterladen");
         var upload = new Button("Neue Version hochladen", u -> {

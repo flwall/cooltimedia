@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
@@ -23,7 +22,7 @@ public class Audio extends OnDemand {
     @PastOrPresent LocalDate publishDate;
 
     @Override
-    public String toString(){
+    public String toString() {
         return title;
     }
 }

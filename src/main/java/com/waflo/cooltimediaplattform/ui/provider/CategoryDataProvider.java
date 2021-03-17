@@ -1,14 +1,13 @@
-package com.waflo.cooltimediaplattform.ui.data;
+package com.waflo.cooltimediaplattform.ui.provider;
 
 import com.vaadin.flow.component.crud.CrudFilter;
 import com.vaadin.flow.data.provider.AbstractDataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.waflo.cooltimediaplattform.backend.model.Person;
+import com.waflo.cooltimediaplattform.backend.model.Category;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
-import com.waflo.cooltimediaplattform.backend.service.PersonService;
+import com.waflo.cooltimediaplattform.backend.service.CategoryService;
 
 import java.lang.reflect.Field;
 import java.util.Comparator;
@@ -16,17 +15,14 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SpringComponent
-public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter> {
-
-    private final PersonService personService;
+public class CategoryDataProvider extends AbstractDataProvider<Category, CrudFilter> {
+    private final CategoryService categoryService;
     private final UserSession session;
 
-    public PersonDataProvider(PersonService personService, UserSession session) {
-
-        this.personService = personService;
+    public CategoryDataProvider(CategoryService categoryService, UserSession session) {
+        this.categoryService = categoryService;
         this.session = session;
     }
-
 
     @Override
     public boolean isInMemory() {
@@ -34,16 +30,16 @@ public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter>
     }
 
     @Override
-    public int size(Query<Person, CrudFilter> query) {
+    public int size(Query<Category, CrudFilter> query) {
         return (int) fetch(query).count();
     }
 
     @Override
-    public Stream<Person> fetch(Query<Person, CrudFilter> query) {
+    public Stream<Category> fetch(Query<Category, CrudFilter> query) {
         int offset = query.getOffset();
         int limit = query.getLimit();
 
-        Stream<Person> stream = personService.findAllByUser(session.getUser().getId()).stream();       //find only for appropriate user
+        Stream<Category> stream = categoryService.findAllByUser(session.getUser().getId()).stream();       //find only for appropriate user
 
         if (query.getFilter().isPresent()) {
             stream = stream
@@ -52,13 +48,16 @@ public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter>
         }
 
         return stream.skip(offset).limit(limit);
+
+
     }
-    private static Predicate<Person> predicate(CrudFilter filter) {
+
+    private static Predicate<Category> predicate(CrudFilter filter) {
         // For RDBMS just generate a WHERE clause
         return filter.getConstraints().entrySet().stream()
-                .map(constraint -> (Predicate<Person>) person -> {
+                .map(constraint -> (Predicate<Category>) category -> {
                     try {
-                        Object value = valueOf(constraint.getKey(), person);
+                        Object value = valueOf(constraint.getKey(), category);
                         return value != null && value.toString().toLowerCase()
                                 .contains(constraint.getValue().toLowerCase());
                     } catch (Exception e) {
@@ -69,24 +68,25 @@ public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter>
                 .reduce(Predicate::and)
                 .orElse(e -> true);
     }
-    private static Object valueOf(String fieldName, Person person) {
+
+    private static Object valueOf(String fieldName, Category category) {
         try {
-            Field field = Person.class.getDeclaredField(fieldName);
+            Field field = Category.class.getDeclaredField(fieldName);
             field.setAccessible(true);
-            return field.get(person);
+            return field.get(category);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private static Comparator<Person> comparator(CrudFilter filter) {
+    private static Comparator<Category> comparator(CrudFilter filter) {
         // For RDBMS just generate an ORDER BY clause
         return filter.getSortOrders().entrySet().stream()
                 .map(sortClause -> {
                     try {
-                        Comparator<Person> comparator
-                                = Comparator.comparing(person ->
-                                (Comparable) valueOf(sortClause.getKey(), person));
+                        Comparator<Category> comparator
+                                = Comparator.comparing(category ->
+                                (Comparable) valueOf(sortClause.getKey(), category));
 
                         if (sortClause.getValue() == SortDirection.DESCENDING) {
                             comparator = comparator.reversed();
@@ -94,18 +94,23 @@ public class PersonDataProvider extends AbstractDataProvider<Person, CrudFilter>
 
                         return comparator;
                     } catch (Exception ex) {
-                        return (Comparator<Person>) (o1, o2) -> 0;
+                        return (Comparator<Category>) (o1, o2) -> 0;
                     }
                 })
                 .reduce(Comparator::thenComparing)
                 .orElse((o1, o2) -> 0);
     }
 
-    public void persist(Person item) {
-        personService.save(item);
+    public void persist(Category item) {
+        categoryService.save(item);
     }
 
-    public void delete(Person item) {
-        personService.delete(item);
+    public void delete(Category item) throws Exception{
+
+        var owner=item.getOwner().stream().findFirst();
+        if(owner.isPresent()&&owner.get().getId()==session.getUser().getId())
+        categoryService.delete(item);
+        else
+            throw new Exception("Du darfst diese Resource nicht löschen");
     }
 }

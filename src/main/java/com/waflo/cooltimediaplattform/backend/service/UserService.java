@@ -24,9 +24,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<User> findByOauthId(String oauth_id){return userRepository.findAll().stream().filter(s->s.getOauth_id().equals(oauth_id)).findFirst();}
+    public Optional<User> findByOauthId(String oauth_id) {
+        return userRepository.findAll().stream().filter(s -> s.getOauth_id().equals(oauth_id)).findFirst();
+    }
 
-    public User save(User u){
+    public User save(User u) {
         return userRepository.save(u);
     }
 }

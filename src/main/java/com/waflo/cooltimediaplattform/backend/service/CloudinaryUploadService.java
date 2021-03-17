@@ -3,7 +3,6 @@ package com.waflo.cooltimediaplattform.backend.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.waflo.cooltimediaplattform.backend.ResourceType;
-import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,8 @@ public class CloudinaryUploadService {
         return res.get("url").toString();
 
     }
-    public String download(String publicId, String format)  {
+
+    public String download(String publicId, String format) {
 
         try {
             return cloudinaryConfig.privateDownload(publicId, format, ObjectUtils.asMap("attachment", true, "expires_at", LocalDateTime.now().plusDays(2).toEpochSecond(ZoneOffset.UTC), "resource_type", "raw"));

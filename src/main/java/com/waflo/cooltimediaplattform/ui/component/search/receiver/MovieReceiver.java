@@ -16,20 +16,20 @@ public class MovieReceiver implements IReceiver<Movie> {
     private final MovieService movieService;
     private final UserSession session;
 
-    public MovieReceiver(MovieService movieService, UserSession session){
+    public MovieReceiver(MovieService movieService, UserSession session) {
         this.movieService = movieService;
         this.session = session;
     }
 
     @Override
     public List<Movie> search(String value) {
-        String lower=value.toLowerCase();
-        return movieService.findAllByUser(session.getUser().getId()).stream().filter(m->m.getTitle().toLowerCase(Locale.ROOT)
+        String lower = value.toLowerCase();
+        return movieService.findAllByUser(session.getUser().getId()).stream().filter(m -> m.getTitle().toLowerCase(Locale.ROOT)
                 .contains(lower)).collect(Collectors.toList());
     }
 
     @Override
     public Optional<Movie> findByValue(String value) {
-                return search(value).stream().findFirst();
+        return search(value).stream().findFirst();
     }
 }

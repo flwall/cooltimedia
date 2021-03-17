@@ -34,7 +34,7 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
     private final CloudinaryUploadService uploadService;
     private final UserSession userSession;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private String title="Audio";
+    private String title = "Audio";
 
     public AudioView(AudioService service, CloudinaryUploadService uploadService, UserSession userSession) {
         this.audioService = service;
@@ -75,7 +75,7 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
 
         var delBtn = new Button("Löschen", l -> {
             try {
-                uploadService.destroy("audios/"+new ArrayList<>(audio.getOwner()).get(0).getId()+"/"+ Utils.toValidFileName(audio.getTitle()));
+                uploadService.destroy("audios/" + new ArrayList<>(audio.getOwner()).get(0).getId() + "/" + Utils.toValidFileName(audio.getTitle()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -85,11 +85,11 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
             back.click();
         });
         var ratingHead = new H3("Bewertungen");
-        var right = new VerticalLayout(ratingHead, renderRatings(audio.getRatings()), userSession.getUser()==null?null:delBtn);
+        var right = new VerticalLayout(ratingHead, renderRatings(audio.getRatings()), userSession.getUser() == null ? null : delBtn);
         var content = new HorizontalLayout(left, right);
 
         add(content);
-        this.title=audio.getTitle();
+        this.title = audio.getTitle();
 
     }
 

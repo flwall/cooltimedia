@@ -1,7 +1,6 @@
 package com.waflo.cooltimediaplattform.ui.views;
 
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -14,18 +13,15 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ReadOnlyHasValue;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.Registration;
 import com.waflo.cooltimediaplattform.backend.ResourceType;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Category;
@@ -35,12 +31,10 @@ import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.UserService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
-import com.waflo.cooltimediaplattform.ui.data.CategoryDataProvider;
-import com.waflo.cooltimediaplattform.ui.data.PersonDataProvider;
-import org.apache.commons.io.FileUtils;
+import com.waflo.cooltimediaplattform.ui.provider.CategoryDataProvider;
+import com.waflo.cooltimediaplattform.ui.provider.PersonDataProvider;
 import org.springframework.security.access.annotation.Secured;
 
-import java.io.File;
 import java.io.IOException;
 
 @Route(value = "account", layout = MainLayout.class)
@@ -84,7 +78,13 @@ public class AccountView extends VerticalLayout {
 
         crud.setDataProvider(personDataProvider);
         crud.addSaveListener(e -> personDataProvider.persist(e.getItem()));
-        crud.addDeleteListener(e -> personDataProvider.delete(e.getItem()));
+        crud.addDeleteListener(e -> {
+            try {
+                personDataProvider.delete(e.getItem());
+            } catch (Exception exception) {
+                new Notification(exception.getMessage()).open();
+            }
+        });
 
         crud.getGrid().removeColumnByKey("image_url");
 
@@ -131,14 +131,14 @@ public class AccountView extends VerticalLayout {
         binder.bind(birth, Person::getBirthDate, Person::setBirthDate);
 
 
-        var inv=new TextField();
+        var inv = new TextField();
         inv.setVisible(false);
         binder.bind(inv, Person::getImage_url, Person::setImage_url);
         form.add(inv);
         if (binder.getBean() == null)
             binder.setBean(new Person());
         pic.addSucceededListener(l -> {
-            String url= null;
+            String url = null;
             try {
                 url = uploadService.uploadStream(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName(), false), ResourceType.IMAGE);
             } catch (IOException e) {
@@ -163,13 +163,12 @@ public class AccountView extends VerticalLayout {
 
     private void initMenuBar() {
         var menu = new MenuBar();
-        menu.addThemeVariants(MenuBarVariant.LUMO_PRIMARY);
-        menu.addItem("Mein Konto", this::initAccount);
-        menu.addItem("Meine Authoren", this::initPersons);
-        menu.addItem("Meine Kategorien", this::initCategories);
+
+        menu.addItem("Mein Konto", this::initAccount).getElement().getStyle().set("margin", "20px");
+        menu.addItem("Meine Authoren", this::initPersons).getElement().getStyle().set("margin", "20px");
+        menu.addItem("Meine Kategorien", this::initCategories).getElement().getStyle().set("margin", "20px");
 
         menu.addItem(new Anchor("/logout", "Ausloggen"));        //change color
-
         add(menu);
         add(notification);
     }
@@ -187,7 +186,13 @@ public class AccountView extends VerticalLayout {
 
         crud.setDataProvider(categoryDataProvider);
         crud.addSaveListener(e -> categoryDataProvider.persist(e.getItem()));
-        crud.addDeleteListener(e -> categoryDataProvider.delete(e.getItem()));
+        crud.addDeleteListener(e -> {
+            try {
+                categoryDataProvider.delete(e.getItem());
+            } catch (Exception exception) {
+                new Notification(exception.getMessage()).open();
+            }
+        });
 
 
         crud.getGrid().removeColumnByKey("id");

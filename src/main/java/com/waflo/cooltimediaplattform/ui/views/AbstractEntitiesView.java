@@ -19,11 +19,9 @@ public abstract class AbstractEntitiesView<T> extends VerticalLayout {
 
     }
 
-
     protected void saveEntity(SaveEvent t) {
         updateList();
         closeEditor();
-
     }
 
     private void updateList() {

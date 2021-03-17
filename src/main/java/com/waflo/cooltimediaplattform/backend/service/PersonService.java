@@ -1,6 +1,5 @@
 package com.waflo.cooltimediaplattform.backend.service;
 
-import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Person;
 import com.waflo.cooltimediaplattform.backend.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ public class PersonService {
         return repository.findById(id);
     }
 
-
     public void save(Person item) {
         repository.save(item);
     }
@@ -35,6 +33,6 @@ public class PersonService {
     }
 
     public List<Person> findAllByUser(long userId) {
-        return repository.findAll().stream().filter(a -> a.getOwner().stream().anyMatch(o -> o.getId() == userId)).collect(Collectors.toList());
+        return repository.findAll().stream().filter(a -> a.getOwner().isEmpty() || a.getOwner().stream().anyMatch(o -> o.getId() == userId)).collect(Collectors.toList());
     }
 }

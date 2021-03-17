@@ -33,7 +33,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
         super(form);
         this.session = session;
         this.movieService = movieService;
-        this.entities=movieService.findAllByUser(session.getUser().getId());           //replace by Movies where User is owner
+        this.entities = movieService.findAllByUser(session.getUser().getId());           //replace by Movies where User is owner
 
         initView();
     }
@@ -47,7 +47,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
         initList();
         add(movieList);
 
-        add(new Button("Hinzufügen", c->openEditor(new Movie())));
+        add(new Button("Hinzufügen", c -> openEditor(new Movie())));
 
         Div content = new Div(form);
         content.addClassName("movieform");
@@ -60,7 +60,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
     @Override
     protected void saveEntity(SaveEvent t) {
         super.saveEntity(t);
-        var not=new Notification("Film erfolgreich gespeichert", 3000);
+        var not = new Notification("Film erfolgreich gespeichert", 3000);
         add(not);
         not.open();
     }
