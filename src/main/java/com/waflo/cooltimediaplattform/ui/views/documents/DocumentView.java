@@ -87,10 +87,10 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             backbtn.click();
 
         });
-        var right = new VerticalLayout(h, delBtn);
-
+        var right = new VerticalLayout(h, userSession.getUser()==null?null:delBtn);
+        
         var content = new HorizontalLayout(left, right);
-        var download = new Anchor(doc.getDocumentUrl(), "Herunterladen");
+        var download = new Anchor(uploadService.download("documents/"+doc.getAuthor().getId()+"/"+Utils.toValidFileName(doc.getTitle()), "raw"), "Herunterladen");
         var upload = new Button("Neue Version hochladen", u -> {
 
             var rec = new FileBuffer();
@@ -101,7 +101,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             upl.addSucceededListener(l -> {
                 try {
 
-                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + userSession.getUser().getId() + "/" + Utils.toValidFileName(doc.getTitle()), ResourceType.RAW);
+                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + doc.getAuthor().getId() + "/" + Utils.toValidFileName(doc.getTitle()), ResourceType.RAW);
                     doc.setDocumentUrl(url);
                     download.setHref(doc.getDocumentUrl());
                 } catch (IOException e) {

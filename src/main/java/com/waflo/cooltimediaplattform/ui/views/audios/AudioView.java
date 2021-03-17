@@ -13,6 +13,7 @@ import com.vaadin.flow.router.*;
 import com.waflo.cooltimediaplattform.backend.Utils;
 import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
@@ -31,12 +32,14 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
     private Audio audio;
     private final AudioService audioService;
     private final CloudinaryUploadService uploadService;
+    private final UserSession userSession;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private String title="Audio";
 
-    public AudioView(AudioService service, CloudinaryUploadService uploadService) {
+    public AudioView(AudioService service, CloudinaryUploadService uploadService, UserSession userSession) {
         this.audioService = service;
         this.uploadService = uploadService;
+        this.userSession = userSession;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
             back.click();
         });
         var ratingHead = new H3("Bewertungen");
-        var right = new VerticalLayout(ratingHead, renderRatings(audio.getRatings()), delBtn);
+        var right = new VerticalLayout(ratingHead, renderRatings(audio.getRatings()), userSession.getUser()==null?null:delBtn);
         var content = new HorizontalLayout(left, right);
 
         add(content);

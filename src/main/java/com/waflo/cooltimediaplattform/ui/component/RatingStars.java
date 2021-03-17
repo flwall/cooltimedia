@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.polymertemplate.EventHandler;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.templatemodel.TemplateModel;
@@ -23,7 +24,7 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
     private int maxRating;
     private int rating;
-
+    private boolean isReadonly;
     public RatingStars(int maxRating) {
         this.maxRating = maxRating;
         this.init();
@@ -39,6 +40,11 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
             var inp=new Input();
             inp.setType("radio");
             inp.setId("rating-"+i);
+            if(i==rating)
+                inp.getElement().setAttribute("checked", "true");
+
+            if(this.isReadonly)
+                inp.setEnabled(false);
 
             final var x=i;
             inp.addValueChangeListener((ev)->onRatingChange(x));
@@ -57,8 +63,6 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
 
     public void onRatingChange(int rat) {
-
-        System.out.println("RATING DID CHANGE");
         for (ValueChangeListener<? super ValueChangeEvent<Integer>> valueChangeListener : toNotify) {
             var self=this;
             var val= new ValueChangeEvent<Integer>() {
@@ -95,7 +99,7 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
     public void setRating(int rating) {
         this.onRatingChange(rating);
-        this.rating = rating;
+        this.setValue(rating);
     }
 
     public int getMaxRating() {
@@ -110,8 +114,11 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
     @Override
     public void setValue(Integer value) {
-        if (value >= 0 && value <= maxRating)
+        if (value >= 0 && value <= maxRating) {
             this.rating = value;
+            this.removeAll();
+            this.init();
+        }
     }
 
     @Override
@@ -128,12 +135,15 @@ public class RatingStars extends HorizontalLayout implements HasValue<HasValue.V
 
     @Override
     public void setReadOnly(boolean readOnly) {
+        this.isReadonly=readOnly;
+        this.removeAll();
+        this.init();
 
     }
 
     @Override
     public boolean isReadOnly() {
-        return false;
+        return this.isReadonly;
     }
 
     @Override

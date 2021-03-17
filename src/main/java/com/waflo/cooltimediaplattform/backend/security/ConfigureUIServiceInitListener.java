@@ -23,7 +23,7 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
             if (SecurityUtils.isUserLoggedIn()) {
                 event.rerouteToError(NotFoundException.class);
             } else {
-                UI.getCurrent().getPage().setLocation("/oauth2/authorization/auth0");
+                UI.getCurrent().getPage().setLocation("/");
             }
         }
     }

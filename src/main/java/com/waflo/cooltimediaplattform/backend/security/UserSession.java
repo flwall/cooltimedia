@@ -40,4 +40,11 @@ public class UserSession implements Serializable {
         return authentication != null;
     }
 
+    public User getGuestUser() {
+        var existing=userService.findByOauthId("guest1234");
+        if(existing.isPresent())return existing.get();
+
+        var newUser=new User("guest1234", "Guest User", "guest@user.com");
+        return userService.save(newUser);
+    }
 }

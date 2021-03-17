@@ -25,4 +25,7 @@ public class RatingService {
     }
 
 
+    public Rating save(Rating bean) {
+        return ratingRepository.save(bean);
+    }
 }

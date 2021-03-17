@@ -41,8 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
+                .antMatchers("/", "/movie/**", "/audio/**", "/document/**").permitAll()
                 // Allow all requests by logged in users.
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
 
                 // Configure the login page.
                 .and().oauth2Login()
@@ -60,6 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Vaadin Flow static resources
                 "/VAADIN/**",
+                "/imgs/**",
 
                 // the standard favicon URI
                 "/favicon.ico",

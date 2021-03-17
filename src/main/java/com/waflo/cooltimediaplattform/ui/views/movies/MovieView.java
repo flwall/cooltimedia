@@ -5,31 +5,44 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
 import com.waflo.cooltimediaplattform.backend.model.Movie;
 import com.waflo.cooltimediaplattform.backend.model.Rating;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.MovieService;
+import com.waflo.cooltimediaplattform.backend.service.RatingService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.RatingStars;
 import com.waflo.cooltimediaplattform.ui.component.Video;
+import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
 import org.springframework.security.access.annotation.Secured;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Route(value = "movie", layout = MainLayout.class)
-@Secured("ROLE_USER")
 public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private final MovieService movieService;
+    private final UserSession userSession;
+    private final RatingService ratingService;
     private Movie movie;
     private String title;
 
-    public MovieView(MovieService service) {
+    public MovieView(MovieService service, UserSession userSession, RatingService ratingService) {
         this.movieService = service;
+        this.userSession=userSession;
+        this.ratingService = ratingService;
     }
 
     @Override
@@ -55,7 +68,10 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
         var mid = initMidContainer();
 
         var right = new VerticalLayout();
-        right.add(renderRatings(movie.getRatings()), new Button("Löschen", l -> {
+        right.add(renderRatings(movie.getRatings()));
+
+        if(userSession.getUser()!=null)
+            right.add(new Button("Löschen", l -> {
             movieService.delete(movie);
             var not = new Notification("Film " + movie.getTitle() + " wurde erfolgreich gelöscht", 3000);
             add(not);
@@ -72,8 +88,39 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
 
     private Component renderRatings(Set<Rating> ratings) {
         var layout = new VerticalLayout();
+
+        var stars=new RatingStars(5);
+        var text=new TextField("Kommentar", "Kommentar");
+        var img=new Image("/imgs/send.png", "Kommentar senden");
+        img.setWidth("20px");
+        var btn=new Button(img);
+
+        var binder=new BeanValidationBinder<Rating>(Rating.class);
+        binder.setBean(new Rating());
+        binder.bind(stars, Rating::getRating, Rating::setRating);
+        binder.bind(text, Rating::getComment, Rating::setComment);
+
+        btn.addClickListener((ev)->{
+            try {
+                binder.writeBean(binder.getBean());
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
+            binder.getBean().setRatedMedia(this.movie);
+            var u=userSession.getUser()==null?userSession.getGuestUser():userSession.getUser();
+            binder.getBean().setCreator(u);
+            fireEvent(new SaveEvent(this, false));
+            ratingService.save(binder.getBean());
+        });
+
+        var form=new FormLayout(new VerticalLayout(stars, new HorizontalLayout(text, btn)));
+
+        layout.add(form);
         for (Rating rating : ratings) {
-            layout.add(new Text(rating.getComment()));
+            var st=new RatingStars(5);
+            st.setRating(rating.getRating());
+            st.setReadOnly(true);
+            layout.add(new H2("von "+rating.getCreator().getUsername()), st, new Text(rating.getComment()));
         }
         return layout;
     }

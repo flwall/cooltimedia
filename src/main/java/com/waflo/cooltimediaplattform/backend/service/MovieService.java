@@ -37,4 +37,8 @@ public class MovieService {
     public List<Movie> findAllByUser(long userId) {
         return repository.findAll().stream().filter(a -> a.getOwner().stream().anyMatch(o -> o.getId() == userId)).collect(Collectors.toList());
     }
+
+    public void update(Movie movie) {
+        repository.saveAndFlush(movie);
+    }
 }
