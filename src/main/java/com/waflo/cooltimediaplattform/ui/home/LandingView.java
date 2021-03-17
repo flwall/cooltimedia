@@ -8,6 +8,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.waflo.cooltimediaplattform.backend.security.SecurityUtils;
 import com.waflo.cooltimediaplattform.ui.HeaderLayout;
+import com.waflo.cooltimediaplattform.ui.component.RatingStars;
 
 @Route(value = "", layout = HeaderLayout.class)
 @PageTitle("Cooltimedia | CTM")
