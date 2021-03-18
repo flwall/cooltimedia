@@ -10,18 +10,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Map;
 
 @Service
-public class CloudinaryUploadService {
+public class CloudinaryUploadService implements IUploadService {
     private final Cloudinary cloudinaryConfig;
 
     public CloudinaryUploadService(Cloudinary cloudinaryConfig) {
         this.cloudinaryConfig = cloudinaryConfig;
     }
 
-    public String uploadStream(InputStream stream, String publicID, ResourceType resourceType) throws IOException {
-        final Map upload = cloudinaryConfig.uploader().upload(IOUtils.toByteArray(stream), ObjectUtils.asMap("public_id", publicID, "resource_type", resourceType.toString(), "overwrite", true));
+
+    @Override
+    public String upload(InputStream toUpload, String filePath, ResourceType typeOfResource) throws IOException {
+
+        var upload = cloudinaryConfig.uploader().upload(IOUtils.toByteArray(toUpload), ObjectUtils.asMap("public_id", filePath, "resource_type", typeOfResource.toString(), "overwrite", true));
+
         return upload.get("url").toString();
     }
 
@@ -32,14 +35,14 @@ public class CloudinaryUploadService {
 
     }
 
-    public String download(String publicId, String format) {
+    public String download(String publicId) throws IOException{
 
         try {
-            return cloudinaryConfig.privateDownload(publicId, format, ObjectUtils.asMap("attachment", true, "expires_at", LocalDateTime.now().plusDays(2).toEpochSecond(ZoneOffset.UTC), "resource_type", "raw"));
+            return cloudinaryConfig.privateDownload(publicId, "raw", ObjectUtils.asMap("attachment", true, "expires_at", LocalDateTime.now().plusDays(2).toEpochSecond(ZoneOffset.UTC), "resource_type", "raw"));
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
+
     }
 
 

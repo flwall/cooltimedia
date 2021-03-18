@@ -22,8 +22,7 @@ public class Rating {
     private User creator;
 
     @ManyToOne
-    @JoinColumn(name = "fk_media")
-    private Media ratedMedia;
+    private OnDemand ratedMedia;
 
 
 }

@@ -16,6 +16,7 @@ import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
+import com.waflo.cooltimediaplattform.backend.service.IUploadService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import org.springframework.security.access.annotation.Secured;
 
@@ -29,11 +30,11 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
 
     private Document doc;
     private final DocumentService documentService;
-    private final CloudinaryUploadService uploadService;
+    private final IUploadService uploadService;
     private final UserSession userSession;
     private String title;
 
-    public DocumentView(DocumentService documentService, CloudinaryUploadService uploadService, UserSession userSession) {
+    public DocumentView(DocumentService documentService, IUploadService uploadService, UserSession userSession) {
 
         this.documentService = documentService;
         this.uploadService = uploadService;
@@ -46,7 +47,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         doc = documentService.findById(parameter).orElseThrow(NotFoundException::new);
 
         initView();
-        this.title=doc.getTitle();
+        this.title = doc.getTitle();
     }
 
     private void initView() {
@@ -87,10 +88,16 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             backbtn.click();
 
         });
-        var right = new VerticalLayout(h, userSession.getUser()==null?null:delBtn);
+        var right = new VerticalLayout(h, userSession.getUser() == null ? null : delBtn);
 
         var content = new HorizontalLayout(left, right);
-        var download = new Anchor(uploadService.download("documents/"+doc.getAuthor().getId()+"/"+Utils.toValidFileName(doc.getTitle()), "raw"), "Herunterladen");
+        Anchor download = null;
+        try {
+            download = new Anchor(uploadService.download("documents/" + doc.getAuthor().getId() + "/" + Utils.toValidFileName(doc.getTitle())), "Herunterladen");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        var finalDownload = download;
         var upload = new Button("Neue Version hochladen", u -> {
 
             var rec = new FileBuffer();
@@ -101,9 +108,9 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
             upl.addSucceededListener(l -> {
                 try {
 
-                    var url = uploadService.uploadStream(rec.getInputStream(), "documents/" + doc.getAuthor().getId() + "/" + Utils.toValidFileName(doc.getTitle()), ResourceType.RAW);
+                    var url = uploadService.upload(rec.getInputStream(), "documents/" + doc.getAuthor().getId() + "/" + Utils.toValidFileName(doc.getTitle()), ResourceType.RAW);
                     doc.setDocumentUrl(url);
-                    download.setHref(doc.getDocumentUrl());
+                    finalDownload.setHref(doc.getDocumentUrl());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

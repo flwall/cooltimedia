@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "onDemands")
 @Entity
 @Data
 public class Category extends Media {
@@ -18,11 +18,10 @@ public class Category extends Media {
     @NotEmpty
     private String name;
 
-
     @ManyToOne
     Category parentCategory;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private List<OnDemand> onDemands;
 
     @Override

@@ -7,23 +7,21 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"ratings", "actors"})
 @Entity
 @Data
 public class OnDemand extends Media {
 
     @ManyToOne
-    @JoinColumn(name = "fk_author")
     private Person author;
 
     @ManyToMany
     private Set<Person> actors;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ratedMedia")
     private Set<Rating> ratings;
 
     @ManyToOne
-    @JoinColumn(name = "fk_category")
     private Category category;
 
 }

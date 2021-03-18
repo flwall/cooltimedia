@@ -25,7 +25,7 @@ public class CooltimediaPlattformApplication {
     public static void main(String[] args) {
         SpringApplication.run(CooltimediaPlattformApplication.class, args);
     }
-    
+
     @Bean
     public Cloudinary cloudinaryConfig() {
         Cloudinary cloudinary = null;

@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Media {
 
     @Id

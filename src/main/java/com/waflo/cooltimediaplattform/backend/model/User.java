@@ -10,7 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "cooltimedia_users")
+@Table(name = "users")
 @Data
 public class User {
 
