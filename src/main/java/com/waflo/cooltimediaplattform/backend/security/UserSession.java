@@ -1,7 +1,9 @@
 package com.waflo.cooltimediaplattform.backend.security;
 
+import com.waflo.cooltimediaplattform.backend.model.Role;
 import com.waflo.cooltimediaplattform.backend.model.User;
 import com.waflo.cooltimediaplattform.backend.service.UserService;
+import org.apache.commons.compress.utils.Sets;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -32,6 +34,8 @@ public class UserSession implements Serializable {
 
         var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
         newUser.setProfile_pic_url(principal.getAttribute("picture"));
+        if (newUser.getUsername().equals("flounded"))
+            newUser.setRoles(Sets.newHashSet(Role.ROLE_ADMIN, Role.ROLE_USER));
         return userService.save(newUser);
     }
 

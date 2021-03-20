@@ -140,7 +140,7 @@ public class AccountView extends VerticalLayout {
         pic.addSucceededListener(l -> {
             String url = null;
             try {
-                url = uploadService.uploadStream(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName(), false), ResourceType.IMAGE);
+                url = uploadService.upload(rec.getInputStream(), Utils.generateTempPublicId(rec.getFileName(), false), ResourceType.IMAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -246,7 +246,7 @@ public class AccountView extends VerticalLayout {
         profilePic.setAcceptedFileTypes("image/*");
         profilePic.addSucceededListener(l -> {
             try {
-                user.setProfile_pic_url(uploadService.uploadStream(rec.getInputStream(), "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername()), ResourceType.IMAGE));
+                user.setProfile_pic_url(uploadService.upload(rec.getInputStream(), "images/" + user.getId() + "/" + Utils.toValidFileName(user.getUsername()), ResourceType.IMAGE));
                 img.setSrc(user.getProfile_pic_url());
             } catch (IOException e) {
                 e.printStackTrace();

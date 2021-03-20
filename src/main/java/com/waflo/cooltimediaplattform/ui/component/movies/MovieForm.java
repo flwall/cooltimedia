@@ -70,7 +70,7 @@ public class MovieForm extends AbstractForm<Movie> {
 
             var id = Utils.generateTempPublicId(rec.getFileName(), false);
             try {
-                uploadService.uploadStream(rec.getInputStream(), id, ResourceType.VIDEO);
+                uploadService.upload(rec.getInputStream(), id, ResourceType.VIDEO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,7 +87,7 @@ public class MovieForm extends AbstractForm<Movie> {
 
             var id = Utils.generateTempPublicId(r.getFileName(), false);
             try {
-                uploadService.uploadStream(r.getInputStream(), id, ResourceType.IMAGE);
+                uploadService.upload(r.getInputStream(), id, ResourceType.IMAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }

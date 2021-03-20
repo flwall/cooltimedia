@@ -69,7 +69,7 @@ public class DocumentForm extends AbstractForm<Document> {
             if (rec.getFileData() == null) return;
             var id = Utils.generateTempPublicId(rec.getFileName(), true);
             try {
-                uploadService.uploadStream(rec.getInputStream(), id, ResourceType.RAW);
+                uploadService.upload(rec.getInputStream(), id, ResourceType.RAW);
             } catch (IOException e) {
                 e.printStackTrace();
             }

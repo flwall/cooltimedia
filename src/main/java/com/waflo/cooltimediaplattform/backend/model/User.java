@@ -1,13 +1,12 @@
 package com.waflo.cooltimediaplattform.backend.model;
 
 import lombok.Data;
+import org.apache.commons.compress.utils.Sets;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +31,9 @@ public class User {
 
     public User() {
     }
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    public Set<Role> roles = Sets.newHashSet(Role.ROLE_USER);
 
     public User(String oauth_id, String username, String email) {
         this.oauth_id = oauth_id;

@@ -31,4 +31,8 @@ public class UserService {
     public User save(User u) {
         return userRepository.save(u);
     }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findAll().stream().filter(u->u.getUsername().equals(username)).findFirst();
+    }
 }

@@ -8,12 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@EnableWebSecurity
+@EnableWebSecurity()
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    public static final String LOGIN_URL = "/login";
 
     private final LogoutHandler logoutHandler;
 
@@ -32,7 +30,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requiresSecure()
                 .and().
                 csrf().disable()
-
 //                .requestCache().requestCache(new CustomRequestCache()).and()          //idt we need this cache
 
                 // Restrict access to our application.
@@ -41,7 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
-                .antMatchers("/", "/movie/**", "/audio/**", "/document/**").permitAll()
+                .antMatchers("/movie/**", "/audio/**", "/document/**", "/").permitAll()
+                .antMatchers("/admin/**").permitAll()       //dont know how to handle RBAC with Spring Security, so doing it manually
                 // Allow all requests by logged in users.
                 .anyRequest().authenticated()
 
@@ -50,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .addLogoutHandler(logoutHandler);
     }
-
 
     /**
      * Allows access to static resources, bypassing Spring security.
