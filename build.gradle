@@ -67,6 +67,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation 'com.sun.faces:jsf-api:2.2.20'
+    implementation 'com.sun.faces:jsf-impl:2.2.20'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'org.primefaces:primefaces:8.0'
 }
 
 dependencyManagement {

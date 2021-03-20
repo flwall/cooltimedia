@@ -4,13 +4,20 @@ import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.web.context.ServletContextAware;
 
+import javax.faces.webapp.FacesServlet;
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 
 
 @SpringBootApplication
+@EntityScan(basePackages = "com.waflo.cooltimediaplattform.backend.model")
 public class CooltimediaPlattformApplication {
 
     @Value("${cloudinary.cloud_name}")
@@ -24,6 +31,22 @@ public class CooltimediaPlattformApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CooltimediaPlattformApplication.class, args);
+    }
+   /* @Bean
+    LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
+        var b=new LocalContainerEntityManagerFactoryBean();
+        b.setPackagesToScan("com.waflo.cooltimediaplattform.backend.model");
+        b.setPersistenceUnitName("dev");
+
+        return b;
+    }*/
+    @Bean
+    ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
+        servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
+        ServletRegistrationBean<FacesServlet> servletRegistrationBean = new ServletRegistrationBean<>(
+                new FacesServlet(), "*.xhtml");
+        servletRegistrationBean.setLoadOnStartup(1);
+        return servletRegistrationBean;
     }
 
     @Bean

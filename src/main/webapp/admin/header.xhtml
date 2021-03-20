@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Admin-Bereich</title>
+    <p:link type="text/css" rel="stylesheet" href="#{request.contextPath}/themes/cupertino/skin.css"/>
+</head>
+<body>
+<ui:composition>
+    <h:form>
+        <p:tabMenu activeIndex="#{param.i}">
+            <p:menuitem value="Benutzerverwaltung" outcome="users" icon="pi pi-star">
+                <f:param name="i" value="0" />
+            </p:menuitem>
+            <p:menuitem value="Kategorieverwaltung" outcome="categories" icon="pi pi-star">
+                <f:param name="i" value="1" />
+            </p:menuitem>
+            <p:menuitem value="Autorenverwaltung" outcome="persons" icon="pi pi-star">
+                <f:param name="i" value="2" />
+            </p:menuitem>
+
+
+        </p:tabMenu>
+    </h:form>
+</ui:composition>
+</body>
+</html>
