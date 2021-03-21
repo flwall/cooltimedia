@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.context.ServletContextAware;
 
@@ -43,6 +44,7 @@ public class CooltimediaPlattformApplication {
     @Bean
     ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
+        servletContext.setInitParameter("primefaces.THEME", "bootstrap");
         ServletRegistrationBean<FacesServlet> servletRegistrationBean = new ServletRegistrationBean<>(
                 new FacesServlet(), "*.xhtml");
         servletRegistrationBean.setLoadOnStartup(1);

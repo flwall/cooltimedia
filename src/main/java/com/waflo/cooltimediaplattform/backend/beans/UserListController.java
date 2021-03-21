@@ -2,6 +2,7 @@ package com.waflo.cooltimediaplattform.backend.beans;
 
 import com.waflo.cooltimediaplattform.backend.jparepository.IRepository;
 import com.waflo.cooltimediaplattform.backend.jparepository.JpaRepository;
+import com.waflo.cooltimediaplattform.backend.model.Role;
 import com.waflo.cooltimediaplattform.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,12 @@ public class UserListController {
         repo.delete(u);
         users = repo.findAll();
     }
+    @Transactional
+    public void save(){
+        for (User user : users) {
+            repo.update(user);
+        }
+    }
 
     public List<User> getUsers() {
         users=repo.findAll();
@@ -49,4 +56,7 @@ public class UserListController {
         this.users = users;
     }
 
+    public String checkRole(User u){
+        return u.getRoles().contains(Role.ROLE_ADMIN)?"admin":"user";
+    }
 }

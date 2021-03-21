@@ -6,5 +6,14 @@
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
     <application>
         <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+
     </application>
+    <converter>
+        <converter-for-class>com.waflo.cooltimediaplattform.backend.model.Category</converter-for-class>
+        <converter-class>com.waflo.cooltimediaplattform.backend.beans.CategoryConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>LocalDateTimeConverter</converter-id>
+        <converter-class>com.waflo.cooltimediaplattform.backend.beans.LocalDateTimeConverter</converter-class>
+    </converter>
 </faces-config>

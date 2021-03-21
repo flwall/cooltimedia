@@ -13,20 +13,25 @@ public class RoleFilter implements Filter {
 
     private final UserSession userSession;
 
-    public RoleFilter(UserSession userSession){
-        this.userSession=userSession;
+    public RoleFilter(UserSession userSession) {
+        this.userSession = userSession;
     }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if(!((HttpServletRequest)request).getServletPath().startsWith("/admin")){
+        if (1 == 1) {      //for simpler debug
             chain.doFilter(request, response);
             return;
         }
-        if(SecurityContextHolder.getContext().getAuthentication()!=null&&userSession.getUser().getRoles().contains(Role.ROLE_ADMIN)){
+        if (!((HttpServletRequest) request).getServletPath().startsWith("/admin")) {
             chain.doFilter(request, response);
             return;
         }
-        var resp=(HttpServletResponse)response;
+        if (SecurityContextHolder.getContext().getAuthentication() != null && userSession.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        var resp = (HttpServletResponse) response;
         resp.sendError(403, "Not Permitted");
     }
 }

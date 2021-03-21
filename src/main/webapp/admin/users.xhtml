@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition template="./layout.xhtml">
-<ui:param name="title" value="Admin - Benutzer"/>
-<ui:define name="content">
-<h:form id="form">
-    <p:panel header="Benutzer - Liste">
-        <p:dataTable id="table" var="user" value="#{userController.users}">
-            <p:column>
-                <f:facet name="header"># Id</f:facet>
-                <h:outputText value="#{user.id}" />
-            </p:column>
+    <ui:param name="title" value="Admin - Benutzer"/>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:panel header="Benutzer - Liste">
+                <p:dataTable id="table" var="user" value="#{userController.users}">
+                    <p:column>
+                        <f:facet name="header"># Id</f:facet>
+                        <h:outputText value="#{user.id}"/>
+                    </p:column>
 
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{user.username}" />
-            </p:column>
-            <p:column>
-               <f:facet name="header">Aktionen</f:facet>
-                <p:commandButton action="#{userController.delete(user)}" value="Entfernen"/>
-            </p:column>
-        </p:dataTable>
-    </p:panel>
-</h:form>
-</ui:define>
+                    <p:column>
+                        <f:facet name="header">Name</f:facet>
+                        <h:outputText value="#{user.username}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Erster Login</f:facet>
+                        <h:outputText value="#{user.createdAt}"><f:converter converterId="LocalDateTimeConverter"/></h:outputText>
+
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header" value="Rolle"/>
+                        <p:selectOneMenu id="option" value="#{user.role}">
+                            <f:selectItem itemLabel="Regular User" itemValue="user"/>
+                            <f:selectItem itemLabel="Admin User" itemValue="admin"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="Speichern" action="#{userController.save()}"/>
+            </p:panel>
+        </h:form>
+    </ui:define>
 </ui:composition>
 </html>

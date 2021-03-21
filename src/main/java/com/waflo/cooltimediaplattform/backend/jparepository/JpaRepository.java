@@ -44,6 +44,11 @@ public class JpaRepository<T> implements IRepository<T,Long>{
         em.persist(instance);
         return instance;
     }
+    @Transactional
+    @Override
+    public T update(T newObj){
+        return em.merge(newObj);
+    }
 
     @Override
     @Transactional

@@ -33,7 +33,7 @@ public class Role {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return roleName.equals(role.roleName);
+        return roleName.equalsIgnoreCase(role.roleName);
     }
 
     @Override

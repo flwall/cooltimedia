@@ -6,6 +6,8 @@ import org.apache.commons.compress.utils.Sets;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,6 +23,8 @@ public class User {
 
     @NotEmpty
     private String username;
+
+    LocalDateTime createdAt;
 
     @Email
     @NotEmpty
@@ -44,5 +48,15 @@ public class User {
     @Override
     public String toString() {
         return "Username: " + username + "\nEmail: " + email;
+    }
+
+    public String getRole(){
+        return roles.contains(Role.ROLE_ADMIN)?"admin":"user";
+    }
+    public void setRole(String s){
+        if(s.equalsIgnoreCase("admin"))
+            roles.add(Role.ROLE_ADMIN);
+        else
+            roles.remove(Role.ROLE_ADMIN);
     }
 }

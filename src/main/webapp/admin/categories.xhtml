@@ -8,27 +8,51 @@
 <ui:param name="title" value="Admin - Kategorien"/>
 <ui:define name="content">
     <p:panel header="Kategorien - Liste">
-        <p:dataTable id="table" var="category" value="#{categoriesController.categories}">
-            <p:column>
-                <f:facet name="header"># Id</f:facet>
-                <h:outputText value="#{category.id}" />
+        <h:form id="form">
+        <p:growl id="msgs" showDetail="true"/>
+        <p:dataTable widgetVar="categories1" id="categories1" var="category" value="#{categoriesController.categories}" editable="true">
+            <p:ajax event="rowEdit" listener="#{categoriesController.onRowEdit}" update=":form:msgs"/>
+            <p:ajax event="rowEditCancel" listener="#{categoriesController.onRowCancel}" update=":form:msgs"/>
+            <p:column headerText="# Id">
+                <h:outputText value="#{category.id}"/>
+            </p:column>
+            <p:column headerText="Name">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{category.name}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{category.name}" style="width:100%" label="Name"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column headerText="Überkategorie">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{category.parentCategory==null?'-':category.parentCategory.name}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:selectOneMenu id="option" value="#{category.parentCategory}">
+                            <f:selectItem itemLabel="select category" itemValue="#{null}"/>
+                            <f:selectItems value="#{categoriesController.parentCategories(category)}" itemValue="#{selectedCategory}" itemLabel="#{selectedCategory.name}" var="selectedCategory" />
+                        </p:selectOneMenu>
+                    </f:facet>
+                </p:cellEditor>
             </p:column>
 
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{category.name}" />
-            </p:column>
-            <p:column>
-                <f:facet name="header">Überkategorie</f:facet>
-                <h:outputText value="#{category.parentCategory==null?'-':category.parentCategory.name}" />
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Aktionen</f:facet>
-                <p:commandButton action="#{categoriesController.delete(category)}" value="Entfernen"/>
+            <p:column style="width:6rem">
+                <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
             </p:column>
         </p:dataTable>
+            <div class="p-grid p-mt-3">
+                <div class="p-col-12">
+                    <p:commandButton value="Add new Category" process="@this" update=":form:msgs"
+                                     action="#{categoriesController.onAddNew()}" oncomplete="PF('categories1').addRow();"/>
+                </div>
+            </div>
+        </h:form>
     </p:panel>
+
 
 </ui:define>
 </ui:composition>

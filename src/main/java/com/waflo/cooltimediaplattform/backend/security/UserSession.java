@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Component
 @SessionScope
@@ -34,6 +35,7 @@ public class UserSession implements Serializable {
 
         var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
         newUser.setProfile_pic_url(principal.getAttribute("picture"));
+        newUser.setCreatedAt(LocalDateTime.now());
         if (newUser.getUsername().equals("flounded"))
             newUser.setRoles(Sets.newHashSet(Role.ROLE_ADMIN, Role.ROLE_USER));
         return userService.save(newUser);
@@ -49,6 +51,7 @@ public class UserSession implements Serializable {
         if (existing.isPresent()) return existing.get();
 
         var newUser = new User("guest1234", "Guest User", "guest@user.com");
+        newUser.setCreatedAt(LocalDateTime.now());
         return userService.save(newUser);
     }
 }

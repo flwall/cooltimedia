@@ -13,5 +13,6 @@ public interface IRepository<T, IDType> {
     Optional<T> findById(IDType id);
     T save(T instance);
     void delete(T obj);
+    T update(T obj);
 
 }
