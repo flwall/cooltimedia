@@ -35,10 +35,13 @@ public class CloudinaryUploadService implements IUploadService {
 
     }
 
-    public String download(String publicId) throws IOException{
+    public String download(String publicId, String format){
 
         try {
-            return cloudinaryConfig.privateDownload(publicId, "jpg", ObjectUtils.asMap("attachment", true, "expires_at", LocalDateTime.now().plusDays(2).toEpochSecond(ZoneOffset.UTC), "resource_type", "raw"));
+            return cloudinaryConfig.privateDownload(publicId, format,
+                    ObjectUtils.asMap("attachment", true, "expires_at",
+                            LocalDateTime.now().plusDays(2).toEpochSecond(ZoneOffset.UTC),
+                            "resource_type", "raw", "type", "upload"));
         } catch (Exception e) {
             return null;
         }

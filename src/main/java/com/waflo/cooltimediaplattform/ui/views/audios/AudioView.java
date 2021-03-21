@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
@@ -20,6 +21,7 @@ import com.waflo.cooltimediaplattform.backend.service.RatingService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.AudioPlayer;
 import com.waflo.cooltimediaplattform.ui.component.RatingComponent;
+import com.waflo.cooltimediaplattform.ui.views.movies.MoviesView;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.IOException;
@@ -83,7 +85,7 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
                 e.printStackTrace();
             }
 
-
+            audioService.delete(audio);
             audio = null;
             back.click();
         });

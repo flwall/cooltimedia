@@ -88,7 +88,7 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         Anchor download = null;
         try {
             var ownerId = doc.getOwner().stream().findFirst().get().getId();
-            download = new Anchor(uploadService.download("documents/" + ownerId + "/" + Utils.toValidFileName(doc.getTitle())), "Herunterladen");
+            download = new Anchor(uploadService.download("documents/" + ownerId + "/" + Utils.toValidFileName(doc.getTitle()), "pdf"), "Herunterladen");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,9 +140,12 @@ public class DocumentView extends VerticalLayout implements HasUrlParameter<Long
         var delBtn = new Button("Löschen", l -> {
             try {
                 uploadService.destroy("documents/" + new ArrayList<>(doc.getOwner()).get(0).getId() + "/" + Utils.toValidFileName(doc.getTitle()));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            documentService.delete(doc);
+            doc=null;
             backBtn.click();
 
         });

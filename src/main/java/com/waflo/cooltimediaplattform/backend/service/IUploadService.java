@@ -28,7 +28,7 @@ public interface IUploadService {
      * @param URI the URI of the resource to download
      * @return the URI where the resource can be downloaded
      */
-    String download(String URI) throws IOException;
+    String download(String URI, String format) throws IOException;
 
     /**
      * Destroys the given resource
