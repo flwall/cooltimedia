@@ -4,6 +4,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -24,5 +25,6 @@ public class Rating {
     @ManyToOne
     private OnDemand ratedMedia;
 
+    private LocalDateTime createdAt;
 
 }

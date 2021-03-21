@@ -16,8 +16,10 @@ import com.waflo.cooltimediaplattform.backend.model.Rating;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
 import com.waflo.cooltimediaplattform.backend.service.CloudinaryUploadService;
+import com.waflo.cooltimediaplattform.backend.service.RatingService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
 import com.waflo.cooltimediaplattform.ui.component.AudioPlayer;
+import com.waflo.cooltimediaplattform.ui.component.RatingComponent;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.IOException;
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 @Route(value = "audio", layout = MainLayout.class)
-@Secured("ROLE_USER")
 public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private Audio audio;
@@ -35,11 +36,13 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
     private final UserSession userSession;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private String title = "Audio";
+    private final RatingService ratingService;
 
-    public AudioView(AudioService service, CloudinaryUploadService uploadService, UserSession userSession) {
+    public AudioView(AudioService service, CloudinaryUploadService uploadService, UserSession userSession, RatingService ratingService) {
         this.audioService = service;
         this.uploadService = uploadService;
         this.userSession = userSession;
+        this.ratingService = ratingService;
     }
 
     @Override
@@ -94,7 +97,16 @@ public class AudioView extends VerticalLayout implements HasUrlParameter<Long>, 
     }
 
     private Component renderRatings(Set<Rating> ratings) {
-        return new H1("todo");
+        return new RatingComponent(ratings, event -> {
+            if (event.getSource() instanceof RatingComponent) {
+                var rating1 = ((RatingComponent) event.getSource()).getBean();
+                rating1.setRatedMedia(audio);
+                var u = userSession.getUser() == null ? userSession.getGuestUser() : userSession.getUser();
+                rating1.setCreator(u);
+                ratingService.save(rating1);
+                ((RatingComponent) event.getSource()).addComment(rating1);
+            }
+        });
     }
 
     @Override

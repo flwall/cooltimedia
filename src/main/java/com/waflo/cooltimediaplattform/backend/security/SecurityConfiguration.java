@@ -1,5 +1,9 @@
 package com.waflo.cooltimediaplattform.backend.security;
 
+import com.waflo.cooltimediaplattform.backend.beans.RoleFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.MappedInterceptor;
 
 @EnableWebSecurity()
 @Configuration
@@ -14,6 +19,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final LogoutHandler logoutHandler;
+    @Autowired
+    private UserSession userSession;
 
     public SecurityConfiguration(LogoutHandler logoutHandler) {
         this.logoutHandler = logoutHandler;
@@ -47,6 +54,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().oauth2Login()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .addLogoutHandler(logoutHandler);
+    }
+    @Bean
+    public FilterRegistrationBean<RoleFilter> loginFilter() {
+        var registration =
+                new FilterRegistrationBean<>(new RoleFilter(this.userSession));
+        registration.addUrlPatterns("/admin/*");
+        return registration;
     }
 
     /**

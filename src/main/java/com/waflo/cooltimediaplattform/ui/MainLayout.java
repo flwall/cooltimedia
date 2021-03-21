@@ -3,6 +3,7 @@ package com.waflo.cooltimediaplattform.ui;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.ui.component.search.MediaSearchCommand;
 import com.waflo.cooltimediaplattform.ui.home.HomeView;
 import com.waflo.cooltimediaplattform.ui.views.audios.AudiosView;
@@ -11,8 +12,8 @@ import com.waflo.cooltimediaplattform.ui.views.movies.MoviesView;
 
 public class MainLayout extends HeaderLayout {
 
-    public MainLayout(MediaSearchCommand cmd) {
-        super(cmd);
+    public MainLayout(MediaSearchCommand cmd, UserSession userSession) {
+        super(cmd, userSession);
         createNavbar();
     }
 

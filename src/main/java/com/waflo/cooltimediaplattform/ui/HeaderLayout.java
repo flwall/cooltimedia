@@ -15,7 +15,9 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 import com.waflo.cooltimediaplattform.backend.model.Media;
+import com.waflo.cooltimediaplattform.backend.model.Role;
 import com.waflo.cooltimediaplattform.backend.security.SecurityUtils;
+import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.ui.component.search.MediaSearchCommand;
 
 import java.util.stream.Collectors;
@@ -26,9 +28,11 @@ public class HeaderLayout extends AppLayout {
 
 
     private final MediaSearchCommand searchCommand;
+    private final UserSession userSession;
 
-    public HeaderLayout(MediaSearchCommand searchCommand) {
+    public HeaderLayout(MediaSearchCommand searchCommand, UserSession userSession) {
         this.searchCommand = searchCommand;
+        this.userSession = userSession;
         createHeader();
     }
 
@@ -50,7 +54,14 @@ public class HeaderLayout extends AppLayout {
             var logout = new Button("Ausloggen");
             account.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
 
-            acc = new HorizontalLayout(new Anchor("/account", account), new Anchor("/logout", logout));
+
+            acc = new HorizontalLayout();
+            if (userSession.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
+                var btn = new Button("Admin-Bereich");
+                btn.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
+                ((HorizontalLayout) acc).add(new Anchor("/admin/users.xhtml", btn));
+            }
+            ((HorizontalLayout) acc).add(new Anchor("/account", account), new Anchor("/logout", logout));
         }
         var header = new HorizontalLayout();
         header.setHeight("128px");

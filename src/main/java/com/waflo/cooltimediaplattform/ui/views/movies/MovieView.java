@@ -5,14 +5,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
@@ -22,15 +21,16 @@ import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.MovieService;
 import com.waflo.cooltimediaplattform.backend.service.RatingService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.RatingComponent;
 import com.waflo.cooltimediaplattform.ui.component.RatingStars;
 import com.waflo.cooltimediaplattform.ui.component.Video;
 import com.waflo.cooltimediaplattform.ui.events.SaveEvent;
-import org.springframework.security.access.annotation.Secured;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Route(value = "movie", layout = MainLayout.class)
+@CssImport("./global.css")
 public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private final MovieService movieService;
@@ -41,7 +41,7 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
 
     public MovieView(MovieService service, UserSession userSession, RatingService ratingService) {
         this.movieService = service;
-        this.userSession=userSession;
+        this.userSession = userSession;
         this.ratingService = ratingService;
     }
 
@@ -50,13 +50,15 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
         movie = movieService.findById(parameter).orElseThrow(NotFoundException::new);
 
         initMovieDetail();
-        this.title=movie.getTitle();
+        this.title = movie.getTitle();
     }
 
     private void initMovieDetail() {
         removeAll();
 
-        var div = new HorizontalLayout(new Button("←", l -> UI.getCurrent().getPage().getHistory().back()), new H1(movie.getTitle()));
+        var tit = new H1(movie.getTitle());
+        tit.getStyle().set("margin", "0 0 0 20px");
+        var div = new HorizontalLayout(new Button("←", l -> UI.getCurrent().getPage().getHistory().back()), tit);
         div.addClassName("movie-detail");
         div.setId(movie.getId() + "");
 
@@ -64,20 +66,13 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
         var img = movie.getThumbnailUrl() == null ? new Image("/imgs/default.jpg", "Kein Bild vorhanden") : new Image(movie.getThumbnailUrl(), "Thumbnail");
         img.setWidth("768px");
         img.setHeight("432px");
-        left.add(new H3("Film-Details"), img);
+        left.add(new Paragraph("Film-Details"), img);
         var mid = initMidContainer();
 
         var right = new VerticalLayout();
         right.add(renderRatings(movie.getRatings()));
 
-        if(userSession.getUser()!=null)
-            right.add(new Button("Löschen", l -> {
-            movieService.delete(movie);
-            var not = new Notification("Film " + movie.getTitle() + " wurde erfolgreich gelöscht", 3000);
-            add(not);
-            not.open();
-            UI.getCurrent().navigate(MoviesView.class);
-        }));
+
         var content = new HorizontalLayout(left, mid, right);
 
 
@@ -87,57 +82,31 @@ public class MovieView extends VerticalLayout implements HasUrlParameter<Long>, 
     }
 
     private Component renderRatings(Set<Rating> ratings) {
-        var layout = new VerticalLayout();
-
-        var stars=new RatingStars(5);
-        var text=new TextField("Kommentar", "Kommentar");
-        var img=new Image("/imgs/send.png", "Kommentar senden");
-        img.setWidth("20px");
-        var btn=new Button(img);
-
-        var binder=new BeanValidationBinder<Rating>(Rating.class);
-        binder.setBean(new Rating());
-        binder.bind(stars, Rating::getRating, Rating::setRating);
-        binder.bind(text, Rating::getComment, Rating::setComment);
-
-        btn.addClickListener((ev)->{
-            try {
-                binder.writeBean(binder.getBean());
-            } catch (ValidationException e) {
-                e.printStackTrace();
+        return new RatingComponent(ratings, event -> {
+            if (event.getSource() instanceof RatingComponent) {
+                var rating1 = ((RatingComponent) event.getSource()).getBean();
+                rating1.setRatedMedia(movie);
+                var u = userSession.getUser() == null ? userSession.getGuestUser() : userSession.getUser();
+                rating1.setCreator(u);
+                ratingService.save(rating1);
+                ((RatingComponent) event.getSource()).addComment(rating1);
             }
-            binder.getBean().setRatedMedia(this.movie);
-            var u=userSession.getUser()==null?userSession.getGuestUser():userSession.getUser();
-            binder.getBean().setCreator(u);
-            fireEvent(new SaveEvent(this, false));
-            ratingService.save(binder.getBean());
         });
-
-        var form=new FormLayout(new VerticalLayout(stars, new HorizontalLayout(text, btn)));
-
-        layout.add(form);
-        for (Rating rating : ratings) {
-            var st=new RatingStars(5);
-            st.setRating(rating.getRating());
-            st.setReadOnly(true);
-            layout.add(new H2("von "+rating.getCreator().getUsername()), st, new Text(rating.getComment()));
-        }
-        return layout;
     }
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private VerticalLayout initMidContainer() {
-        var layout=new VerticalLayout();
+        var layout = new VerticalLayout();
         if (movie.getPublishDate() != null) {
 
-        var publishDate = new Paragraph(movie.getPublishDate().format(formatter));
-        publishDate.setId("pdate");
-        var publishLabel = new Label("Erschienen");
-        publishLabel.setFor(publishDate);
-layout.add(publishLabel,publishDate);
+            var publishDate = new Paragraph(movie.getPublishDate().format(formatter));
+            publishDate.setId("pdate");
+            var publishLabel = new Label("Erschienen");
+            publishLabel.setFor(publishDate);
+            layout.add(publishLabel, publishDate);
         }
-        if(movie.getCategory()!= null) {
+        if (movie.getCategory() != null) {
             var genre = new Paragraph(movie.getCategory().getName());
             genre.setId("genre");
             var genreLabel = new Label("Genre");
@@ -151,18 +120,18 @@ layout.add(publishLabel,publishDate);
         summaryLabel.setFor(summary);
 
 
-        layout.add( summaryLabel,
+        layout.add(summaryLabel,
                 summary, new Button("Ansehen", this::watchVideo));
+        if (userSession.getUser() != null)
+            layout.add(new Button("Löschen", l -> {
+                movieService.delete(movie);
+                var not = new Notification("Film " + movie.getTitle() + " wurde erfolgreich gelöscht", 3000);
+                add(not);
+                not.open();
+                UI.getCurrent().navigate(MoviesView.class);
+            }));
         return layout;
 
-    }
-
-    private Double calculateAvgRating(Movie movie) {
-        var sum = 0d;
-        for (Rating rating : movie.getRatings()) {
-            sum += rating.getRating();
-        }
-        return sum / movie.getRatings().size();
     }
 
     private Div videoContainer;
