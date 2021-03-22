@@ -5,31 +5,99 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition template="./layout.xhtml">
-<ui:param name="title" value="Admin - Personen"/>
-<ui:define name="content">
-    <p:panel header="Autoren - Liste">
-        <p:dataTable id="table" var="person" value="#{personController.persons}">
-            <p:column>
-                <f:facet name="header"># Id</f:facet>
-                <h:outputText value="#{person.id}" />
-            </p:column>
+    <f:metadata>
+        <f:viewAction action="#{personController.load}"/>
+    </f:metadata>
+    <ui:param name="title" value="Admin - Personen"/>
+    <ui:define name="content">
+        <p:panel header="Autoren - Liste">
+            <h:form id="form">
+                <div class="card crud-demo">
+                <p:growl id="messages" showDetail="true"/>
 
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{person.name}" />
-            </p:column>
-            <p:column>
-                <f:facet name="header">Geburtsdatum</f:facet>
-                <h:outputText value="#{person.birthDate.toString}" />
-            </p:column>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Neu" icon="pi pi-plus" actionListener="#{personController.openNew}"
+                                         update=":form:manage-person-content"
+                                         oncomplete="PF('managePersonDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":form:manage-person-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <p:dataTable id="dt-persons" widgetVar="dtPersons" var="person" value="#{personController.persons}"
+                             reflow="true" styleClass="persons-table"
+                             rowKey="#{person.id}" paginator="true"
+                             rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="persons-table-header">
+                            <span style="font-weight: bold">Autoren</span>
 
-            <p:column>
-                <f:facet name="header">Aktionen</f:facet>
-                <p:commandButton action="#{personController.delete(person)}" value="Entfernen"/>
-            </p:column>
-        </p:dataTable>
-    </p:panel>
+                            <span class="filter-container ui-input-icon-left">
+                        <i class="pi pi-search"/>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtPersons').filter()" placeholder="Search"/>
+                    </span>
 
-</ui:define>
+                        </div>
+                    </f:facet>
+                    <p:column headerText="# Id" sortBy="#{person.id}" filterBy="#{person.id}">
+                        <h:outputText value="#{person.id}"/>
+                    </p:column>
+                    <p:column headerText="Name" sortBy="#{person.name}" filterBy="#{person.name}">
+                        <h:outputText value="#{person.name}"/>
+                    </p:column>
+                    <p:column headerText="Bild" exportable="false">
+                        <p:graphicImage value="#{person.image_url}"
+                                        styleClass="person-image"/>
+                    </p:column>
+                    <p:column headerText="Geburtsdatum" sortBy="#{person.birthDate}">
+                        <h:outputText value="#{person.birthDate}" style="font-weight: 700">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update=":form:manage-person-content"
+                                         oncomplete="PF('managePersonDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{person}" target="#{personController.selectedPerson}"/>
+                            <p:resetInput target=":form:manage-person-content"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+
+                <p:dialog header="Autor Details" showEffect="fade" modal="true"
+                          widgetVar="managePersonDialog" responsive="true">
+                    <p:outputPanel id="manage-person-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty personController.selectedPerson}">
+                            <p:graphicImage value="#{personController.selectedPerson.image_url}"
+                                            styleClass="person-image"
+                                            rendered="#{not empty personController.selectedPerson.image_url}"/>
+                            <div class="p-field">
+                                <p:outputLabel for="name">Name</p:outputLabel>
+                                <p:inputText id="name" value="#{personController.selectedPerson.name}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="birthdate">Geburtsdatum</p:outputLabel>
+                                <p:datePicker id="birthdate" yearRange="1930:2021" pattern="dd.MM.yyyy" value="#{personController.selectedPerson.birthDate}"
+                                              monthNavigator="true"
+                                              yearNavigator="true"
+                                              showWeek="true"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Speichern" icon="pi pi-check" actionListener="#{personController.savePerson}"
+                                         update="manage-person-content" process="manage-person-content @this"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('managePersonDialog').hide()"
+                                         class="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+                </div>
+            </h:form>
+        </p:panel>
+
+    </ui:define>
 </ui:composition>
 </html>

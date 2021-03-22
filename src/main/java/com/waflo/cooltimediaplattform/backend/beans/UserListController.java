@@ -30,7 +30,7 @@ public class UserListController {
         repo = new JpaRepository<>(em, User.class);
     }
 
-    @PostConstruct()
+    //@PostConstruct()
     public void load() {
         users = repo.findAll();
     }

@@ -14,7 +14,6 @@ import java.util.Set;
 @Table(name = "users")
 @Data
 public class User {
-
     @Id
     @GeneratedValue
     private long Id;
@@ -23,13 +22,10 @@ public class User {
 
     @NotEmpty
     private String username;
-
     LocalDateTime createdAt;
-
     @Email
     @NotEmpty
     private String email;
-
 
     private String profile_pic_url;
 

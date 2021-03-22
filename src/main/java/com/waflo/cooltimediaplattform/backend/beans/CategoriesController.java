@@ -31,7 +31,7 @@ public class CategoriesController {
     public CategoriesController(EntityManager em) {
         this.repo = new JpaRepository<>(em, Category.class);
     }
-    @PostConstruct
+    //@PostConstruct
     public void load(){
         this.categories=repo.findAll().stream().filter(c->c.getOwner().isEmpty()).collect(Collectors.toList());
     }

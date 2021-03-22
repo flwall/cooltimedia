@@ -8,6 +8,9 @@
         <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
 
     </application>
+    <lifecycle>
+        <phase-listener>org.springframework.web.jsf.DelegatingPhaseListenerMulticaster</phase-listener>
+    </lifecycle>
     <converter>
         <converter-for-class>com.waflo.cooltimediaplattform.backend.model.Category</converter-for-class>
         <converter-class>com.waflo.cooltimediaplattform.backend.beans.CategoryConverter</converter-class>

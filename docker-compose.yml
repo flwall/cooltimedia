@@ -24,3 +24,4 @@ services:
       - DATABASE_PASSWORD=pass1234
       - DATABASE_NAME=cooltimediadb
       - DATABASE_PORT=3333
+      - PORT=8090
