@@ -41,9 +41,8 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
     private void initView() {
         add(new H1("Dokumente"));
         documentList = new ListComponent<>();
-
         initList();
-        add(documentList);
+        add(documentList.initializeUI());
 
         add(new Button("Hinzufügen", c -> openEditor(new Document())));
 
@@ -57,6 +56,6 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
 
     @Override
     protected void initList() {
-        documentList.initUI(documentService.findAllByUser(userSession.getUser().getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
+        documentList.setCommands(documentService.findAllByUser(userSession.getUser().getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
     }
 }

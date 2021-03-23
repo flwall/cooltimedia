@@ -19,10 +19,6 @@ public class RoleFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (1 == 1) {      //for simpler debug
-            chain.doFilter(request, response);
-            return;
-        }
         if (!((HttpServletRequest) request).getServletPath().startsWith("/admin")) {
             chain.doFilter(request, response);
             return;

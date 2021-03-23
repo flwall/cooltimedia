@@ -46,18 +46,18 @@ public class HomeView extends VerticalLayout {
         add(new H1("Guten Tag, " + userSession.getUser().getUsername()));
         add(new H2("Deine Filme"));
         ListComponent<MovieCardCommand> movies = new ListComponent<>();
-        movies.initUI(movieService.findAllByUser(user.getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
-        add(movies);
+        movies.setCommands(movieService.findAllByUser(user.getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
+        add(movies.initializeUI());
 
         add(new H2("Deine Dokumente"));
         ListComponent<DocumentCardCommand> documents = new ListComponent<>();
-        documents.initUI(documentService.findAllByUser(user.getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
-        add(documents);
+        documents.setCommands(documentService.findAllByUser(user.getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
+        add(documents.initializeUI());
 
         add(new H2("Deine Audios"));
         ListComponent<AudioCardCommand> audios = new ListComponent<>();
-        audios.initUI(audioService.findAllByUser(user.getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
-        add(audios);
+        audios.setCommands(audioService.findAllByUser(user.getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
+        add(audios.initializeUI());
     }
 
 }

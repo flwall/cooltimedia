@@ -45,7 +45,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
         movieList = new ListComponent<>();
 
         initList();
-        add(movieList);
+        add(movieList.initializeUI());
 
         add(new Button("Hinzufügen", c -> openEditor(new Movie())));
 
@@ -67,7 +67,7 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
 
     @Override
     protected void initList() {
-        movieList.initUI(movieService.findAllByUser(session.getUser().getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
+        movieList.setCommands(movieService.findAllByUser(session.getUser().getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
     }
 
 

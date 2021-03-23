@@ -43,7 +43,7 @@ public class AudiosView extends AbstractEntitiesView<Audio> {
         audioList = new ListComponent<>();
 
         initList();
-        add(audioList);
+        add(audioList.initializeUI());
 
         add(new Button("Hinzufügen", c -> openEditor(new Audio())));
 
@@ -57,6 +57,6 @@ public class AudiosView extends AbstractEntitiesView<Audio> {
 
     @Override
     protected void initList() {
-        audioList.initUI(audioService.findAllByUser(userSession.getUser().getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
+        audioList.setCommands(audioService.findAllByUser(userSession.getUser().getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
     }
 }
