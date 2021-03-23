@@ -10,6 +10,7 @@ import com.waflo.cooltimediaplattform.backend.service.AudioService;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
 import com.waflo.cooltimediaplattform.backend.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.CardView;
 import com.waflo.cooltimediaplattform.ui.component.ListCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.audios.AudioCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.documents.DocumentCardCommand;
@@ -47,17 +48,17 @@ public class HomeView extends VerticalLayout {
         add(new H2("Deine Filme"));
         ListCardCommand<MovieCardCommand> movies = new ListCardCommand<>();
         movies.setCommands(movieService.findAllByUser(user.getId()).stream().map(MovieCardCommand::new).collect(Collectors.toList()));
-        add(movies.initializeUI());
+        add(new CardView<>(movies));
 
         add(new H2("Deine Dokumente"));
         ListCardCommand<DocumentCardCommand> documents = new ListCardCommand<>();
         documents.setCommands(documentService.findAllByUser(user.getId()).stream().map(DocumentCardCommand::new).collect(Collectors.toList()));
-        add(documents.initializeUI());
+        add(new CardView<>(documents));
 
         add(new H2("Deine Audios"));
         ListCardCommand<AudioCardCommand> audios = new ListCardCommand<>();
         audios.setCommands(audioService.findAllByUser(user.getId()).stream().map(AudioCardCommand::new).collect(Collectors.toList()));
-        add(audios.initializeUI());
+        add(new CardView<>(audios));
     }
 
 }

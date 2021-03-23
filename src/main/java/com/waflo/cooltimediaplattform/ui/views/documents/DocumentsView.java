@@ -9,6 +9,7 @@ import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.CardView;
 import com.waflo.cooltimediaplattform.ui.component.ListCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.documents.DocumentCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.documents.DocumentForm;
@@ -42,7 +43,7 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
         add(new H1("Dokumente"));
         documentList = new ListCardCommand<>();
         initList();
-        add(documentList.initializeUI());
+        add(new CardView<>(documentList));
 
         add(new Button("Hinzufügen", c -> openEditor(new Document())));
 

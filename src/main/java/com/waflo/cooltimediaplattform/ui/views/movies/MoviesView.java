@@ -10,6 +10,7 @@ import com.waflo.cooltimediaplattform.backend.model.Movie;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.MovieService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.CardView;
 import com.waflo.cooltimediaplattform.ui.component.ListCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.movies.MovieCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.movies.MovieForm;
@@ -43,9 +44,9 @@ public class MoviesView extends AbstractEntitiesView<Movie> {
     private void initView() {
         add(new H1("Filme"));
         movieList = new ListCardCommand<>();
-
         initList();
-        add(movieList.initializeUI());
+
+        add(new CardView<>(movieList));
 
         add(new Button("Hinzufügen", c -> openEditor(new Movie())));
 

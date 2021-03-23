@@ -9,6 +9,7 @@ import com.waflo.cooltimediaplattform.backend.model.Audio;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.AudioService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
+import com.waflo.cooltimediaplattform.ui.component.CardView;
 import com.waflo.cooltimediaplattform.ui.component.ListCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.audios.AudioCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.audios.AudioForm;
@@ -43,7 +44,7 @@ public class AudiosView extends AbstractEntitiesView<Audio> {
         audioList = new ListCardCommand<>();
 
         initList();
-        add(audioList.initializeUI());
+        add(new CardView<>(audioList));
 
         add(new Button("Hinzufügen", c -> openEditor(new Audio())));
 

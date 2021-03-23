@@ -33,14 +33,7 @@ public class CooltimediaPlattformApplication {
     public static void main(String[] args) {
         SpringApplication.run(CooltimediaPlattformApplication.class, args);
     }
-   /* @Bean
-    LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
-        var b=new LocalContainerEntityManagerFactoryBean();
-        b.setPackagesToScan("com.waflo.cooltimediaplattform.backend.model");
-        b.setPersistenceUnitName("dev");
 
-        return b;
-    }*/
     @Bean
     ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
