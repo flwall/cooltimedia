@@ -9,11 +9,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListComponent<T extends ICardCommand> implements ICardCommand {
+public class ListCardCommand<T extends ICardCommand> implements ICardCommand {
 
     private List<T> commands=new LinkedList<>();
 
-    public ListComponent(){}
+    public ListCardCommand(){}
 
     @Override
     public Component initializeUI() {

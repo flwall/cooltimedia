@@ -9,7 +9,7 @@ import com.waflo.cooltimediaplattform.backend.model.Document;
 import com.waflo.cooltimediaplattform.backend.security.UserSession;
 import com.waflo.cooltimediaplattform.backend.service.DocumentService;
 import com.waflo.cooltimediaplattform.ui.MainLayout;
-import com.waflo.cooltimediaplattform.ui.component.ListComponent;
+import com.waflo.cooltimediaplattform.ui.component.ListCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.documents.DocumentCardCommand;
 import com.waflo.cooltimediaplattform.ui.component.documents.DocumentForm;
 import com.waflo.cooltimediaplattform.ui.views.AbstractEntitiesView;
@@ -36,11 +36,11 @@ public class DocumentsView extends AbstractEntitiesView<Document> {
     }
 
 
-    ListComponent<DocumentCardCommand> documentList;
+    ListCardCommand<DocumentCardCommand> documentList;
 
     private void initView() {
         add(new H1("Dokumente"));
-        documentList = new ListComponent<>();
+        documentList = new ListCardCommand<>();
         initList();
         add(documentList.initializeUI());
 
