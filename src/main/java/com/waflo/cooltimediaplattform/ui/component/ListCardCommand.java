@@ -17,7 +17,7 @@ public class ListCardCommand<T extends ICardCommand> implements ICardCommand {
 
     @Override
     public Component initializeUI() {
-        var layout=new VerticalLayout();
+        var layout=new HorizontalLayout();
         if(commands.isEmpty())
             layout.add(new Text("Keine Medien vorhanden"));
 
