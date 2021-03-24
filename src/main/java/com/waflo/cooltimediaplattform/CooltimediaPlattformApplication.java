@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.waflo.cooltimediaplattform.backend.model")
-public class CooltimediaPlattformApplication {
+public class CooltimediaPlattformApplication extends SpringBootServletInitializer {
 
     @Value("${cloudinary.cloud_name}")
     private String cloudName;
@@ -34,10 +36,17 @@ public class CooltimediaPlattformApplication {
         SpringApplication.run(CooltimediaPlattformApplication.class, args);
     }
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(CooltimediaPlattformApplication.class);
+    }
+
     @Bean
     ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
         servletContext.setInitParameter("primefaces.THEME", "bootstrap");
+        System.out.println("CONTEXT PATH: "+servletContext.getContextPath());
+        System.out.println("Real Path of usersxhtml: "+servletContext.getRealPath("/admin/users.xhtml"));
         ServletRegistrationBean<FacesServlet> servletRegistrationBean = new ServletRegistrationBean<>(
                 new FacesServlet(), "*.xhtml");
         servletRegistrationBean.setLoadOnStartup(1);
