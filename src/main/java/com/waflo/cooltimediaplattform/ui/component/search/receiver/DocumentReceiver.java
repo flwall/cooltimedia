@@ -21,7 +21,7 @@ public class DocumentReceiver implements IReceiver<Document> {
 
     @Override
     public List<Document> search(String value) {
-        return documentService.findAllByUser(session.getUser().getId()).stream().filter(d -> d.getTitle().equalsIgnoreCase(value)).collect(Collectors.toList());
+        return documentService.findAllByUser(session.getUser().getId()).stream().filter(d -> d.getTitle().toLowerCase().startsWith(value.toLowerCase())).collect(Collectors.toList());
     }
 
     @Override

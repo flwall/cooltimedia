@@ -22,7 +22,7 @@ public class AudioReceiver implements IReceiver<Audio> {
 
     @Override
     public List<Audio> search(String value) {
-        return audioService.findAllByUser(session.getUser().getId()).stream().filter(a -> a.getTitle().equalsIgnoreCase(value)).collect(Collectors.toList());
+        return audioService.findAllByUser(session.getUser().getId()).stream().filter(a -> a.getTitle().toLowerCase().startsWith(value.toLowerCase())).collect(Collectors.toList());
     }
 
     @Override
