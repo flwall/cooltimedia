@@ -1,0 +1,1 @@
+web: chmod +x ./gradlew; ./gradlew bootRun --args='-Dspring.profiles.active=prod -Dserver.port=$PORT -Dvaadin.productionMode=true'
