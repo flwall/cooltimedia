@@ -1,1 +1,1 @@
-web: chmod +x ./gradlew; ./gradlew war; java -jar build/server/webapp-runner-*.jar build/libs/*.war
+web: chmod +x ./gradlew; ./gradlew war; java -jar build/server/webapp-runner-*.jar build/libs/*.war --port $PORT
