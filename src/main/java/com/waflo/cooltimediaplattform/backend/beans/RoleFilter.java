@@ -35,4 +35,10 @@ public class RoleFilter implements Filter {
     public void destroy() {
 
     }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
 }
