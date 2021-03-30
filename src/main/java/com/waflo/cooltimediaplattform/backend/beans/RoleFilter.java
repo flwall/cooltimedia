@@ -30,4 +30,9 @@ public class RoleFilter implements Filter {
         var resp = (HttpServletResponse) response;
         resp.sendError(403, "Not Permitted");
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }
