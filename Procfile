@@ -1,1 +1,1 @@
-web: java -jar build/server/webapp-runner-*.jar build/libs/*.war -Dspring.profiles.active=prod "-Dvaadin.productionMode=true"
+web: java -jar build/server/webapp-runner-*.jar build/libs/*.war
