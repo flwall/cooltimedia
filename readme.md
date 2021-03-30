@@ -1,22 +1,20 @@
-# Cooltimedia
-Cooltimedia should become a platform for managing personal media files and access them from everywhere. 
-Nevertheless, this repository is developed only by myself and motivated by personal interest. So don't expect too much contributions on this project.
+# Multimedia-Management
+This project should be a platform where users can upload various types of media and share them with others.
 
 ## Technology
-This project is a PWA-ready Application built with Vaadin and Spring Boot.  
+This project is built with Vaadin and Spring Boot.   
 It's hosted under https://cooltimedia.herokuapp.com  
-This is still under development
 
-###Authorization
-We use Auth0 as Auth Provider
+### Authorization
+I use Auth0 as Auth Provider
 
 ### Media Cloud Storage  
 We use Cloudinary to store Media of the Users.
 
 # Installation
-There is already Docker Support with a corresponding Docker-Compose config-file, but there are some known bugs in this Configuration. 
-As soon I can release v1 of this repo, I'll fix those Issues.
+You need to specify the connection data for Auth0 and Cloudinary in a file application.yml under src/main/resources.
+It should look like this:  
+![](./docs/application-yml.png)  
 
-## Configuration
-You'll need a MySQL DB to store the data to. You can specify the connection string in the application-dev.properties file.
-Under application.yml you can specify the connection data for Auth0 and Cloudinary.  
+Furthermore, this project requires a MySQL DB. Therefore, specify the connection string in application-dev.properties file under src/main/resources.
+Then you can run with `./gradlew bootRun`

@@ -42,14 +42,6 @@ ext {
     set('vaadinVersion', "14.4.6")
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs "src/main/resources", "src/main/webapp"
-        }
-    }
-}
-
 dependencies {
     implementation 'com.vaadin:vaadin-crud-flow'
     implementation 'com.vaadin:vaadin-spring-boot-starter'

@@ -72,7 +72,6 @@ public class HeaderLayout extends AppLayout {
 
         header.add(logo);
 
-
         if (SecurityUtils.isUserLoggedIn()) {
             var search = new Autocomplete();
             search.setPlaceholder("Search\uD83D\uDD0D");
