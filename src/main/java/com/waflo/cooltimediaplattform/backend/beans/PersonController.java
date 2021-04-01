@@ -52,8 +52,8 @@ public class PersonController {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Person aktualisiert"));
         }
 
-        PrimeFaces.current().executeScript("PF('manageProductDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+        PrimeFaces.current().executeScript("PF('managePersonDialog').hide()");
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-persons");
     }
 
     public List<Person> getPersons() {
