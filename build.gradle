@@ -42,14 +42,6 @@ ext {
     set('vaadinVersion', "14.4.6")
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs "src/main/resources", "src/main/webapp"
-        }
-    }
-}
-
 dependencies {
     implementation 'com.vaadin:vaadin-crud-flow'
     implementation 'com.vaadin:vaadin-spring-boot-starter'
@@ -84,6 +76,8 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'org.primefaces:primefaces:8.0'
     implementation group: 'org.primefaces.themes', name: 'bootstrap', version: '1.0.10'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.4.4'
 
 }
 
