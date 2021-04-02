@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PastOrPresent;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +14,11 @@ import java.util.Set;
 @Entity
 @Data
 public class OnDemand extends Media {
+
+    @NotEmpty
+    private String title;
+    @PastOrPresent
+    private LocalDate publishDate;
 
     @ManyToOne
     private Person author;

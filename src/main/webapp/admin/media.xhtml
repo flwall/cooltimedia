@@ -13,11 +13,45 @@
         <p:panel header="Medien - Liste">
         <h:form id="form">
         <p:growl id="msgs" showDetail="true"/>
-        <p:dataTable var="media" value="#{mediaController.mediaList}">
+        <p:dataTable id="list" var="media" value="#{mediaController.mediaList}" editable="true">
+            <p:ajax event="rowEdit" listener="#{mediaController.onRowEdit}" update=":form:msgs"/>
 
+            <p:column headerText="# Id">
+                <h:outputText value="#{media.id}"/>
+            </p:column>
+            <p:column headerText="Titel">
+                <h:outputText value="#{media.title}"/>
+            </p:column>
+            <p:column headerText="Erstellt am: ">
+                <h:outputText value="#{media.createdAt}"/>
+            </p:column>
+            <p:column headerText="Medienart">
+                <h:outputText value="#{media.type.label}"/>
+            </p:column>
+            <p:column headerText="durchschnittl. Bewertung">
+                <h:outputText value="#{mediaController.avgRatings(media.ratings)}"/>
+            </p:column>
+            <p:column headerText="Besitzer">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{media.owner==null?'Globales Medium':media.owner.username}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:selectOneMenu id="option" value="#{media.owner}">
+                            <f:selectItem itemValue="#{null}" itemLabel="Globales Medium, für jeden sichtbar"/>
+                            <f:selectItems value="#{userController.users}" itemValue="#{selectedUser}" itemLabel="#{selectedUser.username}" var="selectedUser" />
+                        </p:selectOneMenu>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column style="width:6rem">
+                <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                <p:commandButton icon="fa fa-remove" update=":list" action="#{mediaController.deleteMedia(media)}"/>
 
+            </p:column>
         </p:dataTable>
         </h:form>
+            <p>Hinweis: Hier können Medien lediglich zu Benutzern zugewiesen, jedoch nicht direkt bearbeitet bzw. hinzugefügt werden. Dafür verwenden Sie bitte das Frontend für die normalen Benutzer</p>
         </p:panel>
 
     </ui:define>

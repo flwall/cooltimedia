@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.lang.reflect.ParameterizedType;
@@ -21,7 +22,6 @@ public class JpaRepository<T> implements IRepository<T,Long>{
     public JpaRepository(EntityManager em, Class<T> type){
         this.em=em;
         this.persistentClass = type;
-
     }
 
 
@@ -54,6 +54,12 @@ public class JpaRepository<T> implements IRepository<T,Long>{
     @Transactional
     public void delete(T obj) {
         em.remove(em.contains(obj)?em:em.merge(obj));
+    }
+    @Transactional
+    public void delete(long id){
+        var critBuilder=em.getCriteriaBuilder();
+        var deleteCriteria=critBuilder.createCriteriaDelete(persistentClass);
+        em.createQuery(deleteCriteria.where(critBuilder.equal(deleteCriteria.from(persistentClass).get("Id"), id))).executeUpdate();
 
     }
 }

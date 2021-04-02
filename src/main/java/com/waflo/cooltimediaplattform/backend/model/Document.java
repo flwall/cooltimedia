@@ -13,19 +13,15 @@ import java.time.LocalDate;
 @Entity
 public class Document extends OnDemand {
 
-    @NotEmpty
-    private String title;
 
     String summary;
 
-    @PastOrPresent
-    LocalDate publishDate;
     @NotEmpty
     private String documentUrl;
 
 
     @Override
     public String toString() {
-        return title;
+        return getTitle();
     }
 }

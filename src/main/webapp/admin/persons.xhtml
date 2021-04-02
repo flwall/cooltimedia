@@ -17,7 +17,7 @@
 
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton value="Neu" icon="pi pi-plus" actionListener="#{personController.openNew}"
+                        <p:commandButton value="Neu" icon="fa fa-plus" actionListener="#{personController.openNew}"
                                          update=":form:manage-person-content"
                                          oncomplete="PF('managePersonDialog').show()"
                                          styleClass="ui-button-success" style="margin-right: .5rem">
@@ -34,7 +34,7 @@
                             <span style="font-weight: bold">Autoren</span>
 
                             <span class="filter-container ui-input-icon-left">
-                        <i class="pi pi-search"/>
+                        <i class="fa fa-search"/>
                         <p:inputText id="globalFilter" onkeyup="PF('dtPersons').filter()" placeholder="Search"/>
                     </span>
 
@@ -56,7 +56,7 @@
                     </p:column>
 
                     <p:column exportable="false">
-                        <p:commandButton icon="pi pi-pencil" update=":form:manage-person-content"
+                        <p:commandButton icon="fa fa-pencil" update=":form:manage-person-content"
                                          oncomplete="PF('managePersonDialog').show()"
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
                             <f:setPropertyActionListener value="#{person}" target="#{personController.selectedPerson}"/>
@@ -88,9 +88,9 @@
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Speichern" icon="pi pi-check" actionListener="#{personController.savePerson}"
+                        <p:commandButton value="Speichern" icon="fa fa-check" actionListener="#{personController.savePerson}"
                                          update="manage-person-content" process="manage-person-content @this"/>
-                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('managePersonDialog').hide()"
+                        <p:commandButton value="Cancel" icon="fa fa-times" onclick="PF('managePersonDialog').hide()"
                                          class="ui-button-secondary"/>
                     </f:facet>
                 </p:dialog>

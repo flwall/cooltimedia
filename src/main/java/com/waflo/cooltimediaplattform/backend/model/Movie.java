@@ -14,19 +14,15 @@ import java.time.LocalDate;
 @Data
 public class Movie extends OnDemand {
 
-    @NotEmpty
-    String title;
 
     String summary;
     @NotEmpty
     private String streamUrl;
 
-    @PastOrPresent
-    LocalDate publishDate;
 
     private String thumbnailUrl;
 
     public String toString() {
-        return title;
+        return getTitle();
     }
 }
