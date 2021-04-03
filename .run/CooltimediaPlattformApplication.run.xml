@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CooltimediaPlattformApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="cooltimedia-plattform.main" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+      </ENTRIES>
+    </extension>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.waflo.cooltimediaplattform.CooltimediaPlattformApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=prod" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

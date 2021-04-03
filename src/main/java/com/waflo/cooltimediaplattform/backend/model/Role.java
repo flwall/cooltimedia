@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Data
 public class Role {
-    public static final Role ROLE_USER = new Role("USER"), ROLE_ADMIN = new Role("ADMIN");
+    public static Role ROLE_USER = new Role("USER"), ROLE_ADMIN = new Role("ADMIN");
 
     @Id
     @GeneratedValue

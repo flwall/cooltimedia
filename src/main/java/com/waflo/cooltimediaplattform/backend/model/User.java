@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,7 +31,7 @@ public class User {
     public User() {
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     public Set<Role> roles = Sets.newHashSet(Role.ROLE_USER);
 
     public User(String oauth_id, String username, String email) {
@@ -46,11 +45,12 @@ public class User {
         return "Username: " + username + "\nEmail: " + email;
     }
 
-    public String getRole(){
-        return roles.contains(Role.ROLE_ADMIN)?"admin":"user";
+    public String getRole() {
+        return roles.contains(Role.ROLE_ADMIN) ? "admin" : "user";
     }
-    public void setRole(String s){
-        if(s.equalsIgnoreCase("admin"))
+
+    public void setRole(String s) {
+        if (s.equalsIgnoreCase("admin"))
             roles.add(Role.ROLE_ADMIN);
         else
             roles.remove(Role.ROLE_ADMIN);

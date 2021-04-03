@@ -13,7 +13,6 @@ import java.util.List;
 public class Category extends Media {
 
     @NotEmpty
-    @Column(unique = true)
     private String name;
 
     @ManyToOne

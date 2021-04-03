@@ -46,7 +46,7 @@
             </p:column>
             <p:column style="width:6rem">
                 <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
-                <p:commandButton icon="fa fa-remove" update=":list" action="#{mediaController.deleteMedia(media)}"/>
+                <p:commandButton icon="fa fa-remove" update=":form:list" action="#{mediaController.deleteMedia(media)}"/>
 
             </p:column>
         </p:dataTable>

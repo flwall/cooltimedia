@@ -1,7 +1,10 @@
 package com.waflo.cooltimediaplattform;
 
 import com.cloudinary.Cloudinary;
+import com.waflo.cooltimediaplattform.backend.model.Role;
+import com.waflo.cooltimediaplattform.backend.service.RoleService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -36,6 +39,16 @@ public class CooltimediaPlattformApplication extends SpringBootServletInitialize
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(CooltimediaPlattformApplication.class);
+    }
+
+    @Bean
+    public CommandLineRunner loadData(RoleService roleService) {
+        return args -> {
+            var admin = roleService.findByRoleName("ADMIN");
+            var user = roleService.findByRoleName("USER");
+            admin.ifPresentOrElse(act -> Role.ROLE_ADMIN = act, () -> Role.ROLE_ADMIN = roleService.save(Role.ROLE_ADMIN));
+            user.ifPresentOrElse(act -> Role.ROLE_USER = act, () -> Role.ROLE_USER = roleService.save(Role.ROLE_USER));
+        };
     }
 
     @Bean

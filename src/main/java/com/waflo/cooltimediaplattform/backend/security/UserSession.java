@@ -36,9 +36,11 @@ public class UserSession implements Serializable {
         var newUser = new User(principal.getName(), principal.getAttribute("name"), principal.getAttribute("email"));
         newUser.setProfile_pic_url(principal.getAttribute("picture"));
         newUser.setCreatedAt(LocalDateTime.now());
-        if (newUser.getUsername().equals("flounded"))
+
+        if(newUser.getUsername().equals("flounded"))
             newUser.setRoles(Sets.newHashSet(Role.ROLE_ADMIN, Role.ROLE_USER));
-        return userService.save(newUser);
+        var user=userService.save(newUser);
+        return user;
     }
 
     public boolean isLoggedIn() {

@@ -26,7 +26,7 @@ public class OnDemand extends Media {
     @ManyToMany
     private Set<Person> actors;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ratedMedia")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ratedMedia", cascade = CascadeType.REMOVE)
     private Set<Rating> ratings;
 
     @ManyToOne
