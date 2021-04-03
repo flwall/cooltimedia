@@ -1,27 +1,13 @@
 version: '3'
 
 services:
-
-  cooltimedia-db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=cooltimediadb
-      - MYSQL_USER=cooltimedia
-      - MYSQL_PASSWORD=pass1234
+  #db not included because its hosted on AWS (for sharing and easy showcasing) - if you want to feel free to add a MySQL DB here and set config vars in application-prod.properties
 
   myapp-main:
     build:
       .
     restart: on-failure
-    depends_on:
-      - cooltimedia-db
     ports:
-      - 8080:8080
+      - 8090:8090
     environment:
-      - DATABASE_HOST=cooltimedia-db
-      - DATABASE_USER=cooltimedia
-      - DATABASE_PASSWORD=pass1234
-      - DATABASE_NAME=cooltimediadb
-      - DATABASE_PORT=3333
       - PORT=8090

@@ -1,0 +1,7 @@
+node_modules/
+build/
+.github
+.idea
+.git
+readme.md
+docs
